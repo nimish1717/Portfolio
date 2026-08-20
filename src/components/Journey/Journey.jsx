@@ -17,6 +17,7 @@ export const Journey = () => {
     const processRef = useRef(null);
 
     useEffect(() => {
+        if (!containerRef.current) return;
         const ctx = gsap.context(() => {
             // Process Flow Animation
             const steps = gsap.utils.toArray('.process-step');

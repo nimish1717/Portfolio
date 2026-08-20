@@ -3,6 +3,7 @@ import gsap from 'gsap';
 export const Achievements = () => {
     const containerRef = useRef(null);
     useEffect(() => {
+        if (!containerRef.current) return;
         const ctx = gsap.context(() => {
             // Counter animation for numbers
             const counters = gsap.utils.toArray('.counter-val');

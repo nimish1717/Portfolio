@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { useStore } from '../../store/useStore';
 
 export const About = () => {
     const containerRef = useRef(null);
@@ -9,8 +10,10 @@ export const About = () => {
     const line4Ref = useRef(null);
     const invertWordRef = useRef(null);
     const introRef = useRef(null);
+    const setActiveWorld = useStore((state) => state.setActiveWorld);
 
     useEffect(() => {
+        if (!containerRef.current) return;
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -18,6 +21,8 @@ export const About = () => {
                     start: 'top 80%',
                     end: 'center center',
                     scrub: 1,
+                    onEnter: () => setActiveWorld('about'),
+                    onEnterBack: () => setActiveWorld('about'),
                 }
             });
 

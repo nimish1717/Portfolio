@@ -10,6 +10,7 @@ export const Loader = () => {
     const scanlineRef = useRef(null);
 
     useEffect(() => {
+        if (!loaderRef.current) return;
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 onComplete: () => {

@@ -9,6 +9,7 @@ export const CaseStudyOverlay = ({ project, onClose }) => {
         // Lock body scroll
         document.body.style.overflow = 'hidden';
 
+        if (!overlayRef.current) return;
         const ctx = gsap.context(() => {
             const tl = gsap.timeline();
             tl.fromTo(overlayRef.current, {
