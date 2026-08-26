@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FileText, ArrowRight } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 export function Contact() {
   return (
@@ -48,37 +49,43 @@ export function Contact() {
           </a>
 
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Link
-              href="https://github.com/nimishagrawal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
-            >
-              <FaGithub size={20} />
-              <span className="font-mono text-sm">GitHub</span>
-            </Link>
+            <Magnetic>
+              <Link
+                href="https://github.com/nimishagrawal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
+              >
+                <FaGithub size={20} />
+                <span className="font-mono text-sm">GitHub</span>
+              </Link>
+            </Magnetic>
 
             <span className="text-white/20 hidden md:inline">/</span>
 
-            <Link
-              href="https://linkedin.com/in/nimishagrawal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
-            >
-              <FaLinkedin size={20} />
-              <span className="font-mono text-sm">LinkedIn</span>
-            </Link>
+            <Magnetic>
+              <Link
+                href="https://linkedin.com/in/nimishagrawal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
+              >
+                <FaLinkedin size={20} />
+                <span className="font-mono text-sm">LinkedIn</span>
+              </Link>
+            </Magnetic>
 
             <span className="text-white/20 hidden md:inline">/</span>
 
-            <Link
-              href="#resume"
-              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
-            >
-              <FileText size={20} />
-              <span className="font-mono text-sm">Resume</span>
-            </Link>
+            <Magnetic>
+              <Link
+                href="#resume"
+                className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
+              >
+                <FileText size={20} />
+                <span className="font-mono text-sm">Resume</span>
+              </Link>
+            </Magnetic>
           </div>
         </motion.div>
       </div>

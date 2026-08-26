@@ -1,6 +1,9 @@
 import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { CursorProvider } from "@/components/ui/CursorContext";
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { IntroLoader } from "@/components/ui/IntroLoader";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -35,7 +38,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.variable} ${jetbrainsMono.variable} font-sans antialiased bg-black text-neutral-100 min-h-screen flex flex-col`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
+        <IntroLoader />
+        <CursorProvider>
+          <CustomCursor />
+          <SmoothScroll>{children}</SmoothScroll>
+        </CursorProvider>
       </body>
     </html>
   );

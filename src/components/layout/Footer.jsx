@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 export function Footer() {
   return (
@@ -16,28 +17,34 @@ export function Footer() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="https://github.com/nimishagrawal"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
-          >
-            <FaGithub size={20} />
-          </Link>
-          <Link
-            href="https://linkedin.com/in/nimishagrawal"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
-          >
-            <FaLinkedin size={20} />
-          </Link>
-          <Link
-            href="mailto:contact@nimishagrawal.com"
-            className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
-          >
-            <Mail size={20} />
-          </Link>
+          <Magnetic>
+            <Link
+              href="https://github.com/nimishagrawal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
+            >
+              <FaGithub size={20} />
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link
+              href="https://linkedin.com/in/nimishagrawal"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
+            >
+              <FaLinkedin size={20} />
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link
+              href="mailto:contact@nimishagrawal.com"
+              className="p-2 rounded-full glass hover:bg-white/10 transition-colors text-neutral-400 hover:text-white"
+            >
+              <Mail size={20} />
+            </Link>
+          </Magnetic>
         </div>
       </div>
       <div className="max-w-6xl mx-auto mt-8 text-center text-xs text-neutral-600">

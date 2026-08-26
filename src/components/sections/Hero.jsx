@@ -2,113 +2,101 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowDown, FileText, ChevronRight } from "lucide-react";
+import { Download, ChevronRight } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { TechCubeNetwork } from "@/components/ui/TechCubeNetwork";
 
 export function Hero() {
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
-    >
-      {/* Background Data Flow Visualization */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-[var(--accent)] opacity-20 blur-[100px]"></div>
+    <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-[#050505]">
+      
+      {/* 3D Network on the right (or full bg on mobile) */}
+      <div className="absolute inset-0 md:left-1/2 md:w-1/2 z-0">
+        <TechCubeNetwork />
+      </div>
+      
+      {/* Subtle lighting */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#6d28d9] rounded-full blur-[150px] opacity-10 animate-pulse"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px]"></div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col items-start pt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border-[var(--accent-muted)] mb-6 text-sm"
-        >
-          <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
-          <span className="text-neutral-300 font-mono text-xs">
-            Computer Engineering @ Thapar Institute
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-4 text-gradient uppercase"
-        >
-          Nimish
-          <br />
-          Agrawal
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl md:text-2xl text-neutral-400 max-w-2xl mb-8 font-light"
-        >
-          I build scalable web applications, intelligent systems, and digital
-          experiences that solve real problems.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-wrap items-center gap-4"
-        >
-          <Link
-            href="#projects"
-            className="group relative inline-flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium overflow-hidden transition-transform hover:scale-105"
+      <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col md:flex-row items-center">
+        
+        {/* Left Content */}
+        <div className="w-full md:w-1/2 flex flex-col justify-center text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="relative z-10">View Projects</span>
-            <ChevronRight
-              size={18}
-              className="relative z-10 group-hover:translate-x-1 transition-transform"
-            />
-            <div className="absolute inset-0 bg-[var(--accent)] translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 z-0"></div>
-          </Link>
+            <p className="text-[#a855f7] font-mono text-sm md:text-base tracking-widest mb-4 uppercase">
+              // Hello, I'm
+            </p>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 text-white leading-tight">
+              NIMISH <br className="hidden md:block" />
+              AGRAWAL <span className="text-[#a855f7]">//</span>
+            </h1>
 
-          <Link
-            href="#resume"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass hover:bg-white/10 transition-colors"
+            <h2 className="text-xl md:text-2xl text-neutral-300 font-medium mb-6">
+              Software Engineer <span className="text-neutral-600">|</span> AI/ML Enthusiast <span className="text-neutral-600">|</span> Problem Solver
+            </h2>
+
+            <p className="text-neutral-400 text-base md:text-lg max-w-lg mb-10 leading-relaxed">
+              I build intelligent systems and scalable applications that solve real-world problems.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-wrap items-center gap-6"
           >
-            <FileText size={18} />
-            <span>Resume</span>
-          </Link>
+            <Magnetic>
+              <Link
+                href="#projects"
+                className="group flex items-center justify-center gap-2 bg-[#6d28d9] hover:bg-[#5b21b6] text-white px-8 py-3.5 rounded-sm font-medium transition-colors tracking-wide text-sm"
+              >
+                <span>EXPLORE MY WORK</span>
+              </Link>
+            </Magnetic>
 
-          <div className="flex items-center gap-2 ml-2">
-            <Link
-              href="https://github.com/nimishagrawal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full glass hover:bg-white/10 transition-colors hover:text-white text-neutral-400"
-            >
+            <Magnetic>
+              <Link
+                href="#resume"
+                className="flex items-center justify-center gap-2 text-white px-4 py-3.5 hover:text-[#a855f7] transition-colors tracking-wide text-sm font-medium"
+              >
+                <span>VIEW RESUME</span>
+                <Download size={16} />
+              </Link>
+            </Magnetic>
+          </motion.div>
+        </div>
+
+        {/* Right Side Empty for 3D Model Desktop */}
+        <div className="hidden md:block w-full md:w-1/2 h-[600px] pointer-events-none">
+          {/* Reserved for TechCubeNetwork overlay */}
+        </div>
+
+        {/* Vertical Socials (Desktop only) */}
+        <div className="hidden lg:flex flex-col gap-6 absolute right-6 top-1/2 -translate-y-1/2 z-20">
+          <Magnetic>
+            <Link href="https://github.com/nimishagrawal" target="_blank" className="text-neutral-500 hover:text-white transition-colors">
               <FaGithub size={20} />
             </Link>
-            <Link
-              href="https://linkedin.com/in/nimishagrawal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full glass hover:bg-white/10 transition-colors hover:text-white text-neutral-400"
-            >
+          </Magnetic>
+          <Magnetic>
+            <Link href="https://linkedin.com/in/nimishagrawal" target="_blank" className="text-neutral-500 hover:text-white transition-colors">
               <FaLinkedin size={20} />
             </Link>
-          </div>
-        </motion.div>
-      </div>
+          </Magnetic>
+          <div className="h-12 w-[1px] bg-neutral-800 mx-auto mt-4"></div>
+        </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-500"
-      >
-        <span className="text-xs font-mono uppercase tracking-widest">
-          Scroll to explore
-        </span>
-        <ArrowDown size={16} className="animate-bounce" />
-      </motion.div>
+      </div>
     </section>
   );
 }
