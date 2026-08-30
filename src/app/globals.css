@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #030303;
+  --color-bg: #0C0C0C;
   --color-fg: #f5f5f0;
   --color-accent: #e8ff47; /* Yellow Accent */
   --color-border: rgba(245, 245, 240, 0.1);
@@ -21,7 +21,7 @@
 
 @layer base {
   :root {
-    --bg: #030303;
+    --bg: #0C0C0C;
     --fg: #f5f5f0;
     --accent: #e8ff47;
   }
@@ -82,4 +82,10 @@
   z-index: 9999;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Native Cursor Hiding for Custom Cursor */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
 }

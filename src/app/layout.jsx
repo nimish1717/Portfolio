@@ -1,7 +1,6 @@
 import { Bebas_Neue, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/providers/LenisProvider";
-import { CursorProvider } from "@/components/ui/CursorContext";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -53,9 +52,7 @@ export default function RootLayout({ children }) {
     >
       <body className="bg-bg text-fg font-inter antialiased" suppressHydrationWarning>
         <LenisProvider>
-          <CursorProvider>
-            {children}
-          </CursorProvider>
+          {children}
         </LenisProvider>
       </body>
     </html>
