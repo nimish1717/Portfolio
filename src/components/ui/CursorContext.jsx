@@ -1,27 +1,38 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
-const CursorContext = createContext();
+const CursorContext = createContext({
+  cursorType: "default",
+  cursorText: "",
+  cursorChangeHandler: () => {},
+  cursorTextHandler: () => {},
+});
 
 export function CursorProvider({ children }) {
-  const [cursorType, setCursorType] = useState("default"); // default, pointer, view
+  const [cursorType, setCursorType] = useState("default");
+  const [cursorText, setCursorText] = useState("");
 
-  const cursorChangeHandler = (cursorType) => {
-    setCursorType(cursorType);
-  };
+  const cursorChangeHandler = useCallback((type) => {
+    setCursorType(type);
+  }, []);
+
+  const cursorTextHandler = useCallback((text) => {
+    setCursorText(text);
+  }, []);
 
   return (
-    <CursorContext.Provider value={{ cursorType, cursorChangeHandler }}>
+    <CursorContext.Provider
+      value={{
+        cursorType,
+        cursorText,
+        cursorChangeHandler,
+        cursorTextHandler,
+      }}
+    >
       {children}
     </CursorContext.Provider>
   );
 }
 
-export const useCursor = () => {
-  const context = useContext(CursorContext);
-  if (context === undefined) {
-    throw new Error("useCursor must be used within a CursorProvider");
-  }
-  return context;
-};
+export const useCursor = () => useContext(CursorContext);
