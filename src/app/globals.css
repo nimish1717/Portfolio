@@ -1,28 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0C0C0C;
-  --color-fg: #f5f5f0;
-  --color-accent: #e8ff47; /* Yellow Accent */
-  --color-border: rgba(245, 245, 240, 0.1);
-  --color-muted: rgba(245, 245, 240, 0.4);
+  --color-charcoal: #0D0D0F;
+  --color-graphite: #17181B;
+  --color-surface: #202126;
+  --color-light: #F1EFEA;
+  --color-muted: #9B9A96;
+  --color-accent: #e8ff47; /* Electric Lime */
+
+  /* Legacy aliases for existing components before they are updated */
+  --color-bg: #0D0D0F;
+  --color-fg: #F1EFEA;
+  --color-border: rgba(241, 239, 234, 0.1);
 
   --font-inter: var(--font-inter);
   --font-bebas: var(--font-bebas);
-  
-  --animate-scroll-line: scrollLine 2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
-  @keyframes scrollLine {
-    0% { transform: scaleY(0); transform-origin: top; }
-    50% { transform: scaleY(1); transform-origin: top; }
-    50.1% { transform: scaleY(1); transform-origin: bottom; }
-    100% { transform: scaleY(0); transform-origin: bottom; }
-  }
 }
 
 @layer base {
   :root {
-    --bg: #0C0C0C;
-    --fg: #f5f5f0;
+    --bg: #0D0D0F;
+    --fg: #F1EFEA;
     --accent: #e8ff47;
   }
   
@@ -69,6 +67,27 @@
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
   }
+
+  /* Background Modes */
+  .bg-mode-dark {
+    background-color: #0D0D0F;
+    color: #F1EFEA;
+  }
+  
+  .bg-mode-graphite {
+    background-color: #17181B;
+    color: #F1EFEA;
+  }
+  
+  .bg-mode-light {
+    background-color: #F1EFEA;
+    color: #0D0D0F;
+  }
+  
+  .bg-mode-surface {
+    background-color: #202126;
+    color: #F1EFEA;
+  }
 }
 
 /* Subtle Film Grain Noise Overlay */
@@ -80,7 +99,7 @@
   height: 100vh;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.03;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 

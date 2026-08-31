@@ -1,140 +1,182 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useCursor } from "@/components/v3/ui/CustomCursor";
-import { skillsData } from "@/data/skills";
+
+const ECOSYSTEM = [
+  {
+    domain: "FRONTEND",
+    angle: 0,
+    tech: ["React", "Next.js", "Tailwind", "Framer Motion", "GSAP"]
+  },
+  {
+    domain: "BACKEND",
+    angle: 72,
+    tech: ["Node.js", "Express", "REST APIs", "WebSockets"]
+  },
+  {
+    domain: "AI / ML",
+    angle: 144,
+    tech: ["Python", "TensorFlow", "Scikit", "Pandas"]
+  },
+  {
+    domain: "DATABASE",
+    angle: 216,
+    tech: ["MongoDB", "PostgreSQL", "Mongoose", "SQL"]
+  },
+  {
+    domain: "DESIGN",
+    angle: 288,
+    tech: ["Figma", "UI/UX", "Wireframing", "Prototyping"]
+  }
+];
 
 export function Chapter04Toolkit() {
   const containerRef = useRef(null);
-  const { setCursorVariant, setCursorText } = useCursor();
-  
-  // Flatten skills for the matrix
-  const allSkills = skillsData.flatMap(category => 
-    category.skills.map(skill => ({ skill, category: category.title }))
-  );
+  const [activeDomain, setActiveDomain] = useState(null);
+  const { setCursorVariant } = useCursor();
 
-  const [activeSkill, setActiveSkill] = useState(allSkills[0]);
-
-  // Scroll animations for the radial diagram and matrix
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   });
 
-  const radialRotation = useTransform(scrollYProgress, [0, 1], [0, 180]);
-  const matrixY = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  // Smooth color transition from Graphite (#17181B) to Light (#F1EFEA) and back
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    ["#17181B", "#F1EFEA", "#F1EFEA", "#0D0D0F"]
+  );
+
+  const textColor = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    ["#F1EFEA", "#0D0D0F", "#0D0D0F", "#F1EFEA"]
+  );
+
+  const borderColor = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    ["rgba(255,255,255,0.1)", "rgba(13,13,15,0.1)", "rgba(13,13,15,0.1)", "rgba(255,255,255,0.1)"]
+  );
+
+  // Radial System scroll animations
+  const radialScale = useTransform(scrollYProgress, [0.1, 0.3, 0.8, 0.9], [0.5, 1, 1, 0.5]);
+  const radialOpacity = useTransform(scrollYProgress, [0.1, 0.2, 0.8, 0.9], [0, 1, 1, 0]);
+  const radialRotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+
+  // Transition into Project tag at the very end
+  const projectTagOpacity = useTransform(scrollYProgress, [0.75, 0.85], [0, 1]);
+  const projectTagScale = useTransform(scrollYProgress, [0.75, 0.85], [0.8, 1]);
 
   return (
-    <section ref={containerRef} id="toolkit" className="relative w-full min-h-screen bg-[#EAEAEA] text-[#111111] py-32 overflow-hidden selection:bg-[#111111] selection:text-[#EAEAEA]">
-      <div className="container mx-auto px-6 max-w-7xl relative z-10 flex flex-col h-full">
+    <motion.section 
+      id="toolkit" 
+      ref={containerRef} 
+      style={{ backgroundColor, color: textColor }}
+      className="relative w-full min-h-[150vh] py-32 overflow-hidden flex flex-col"
+    >
+      {/* Light noise for texture */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-multiply pointer-events-none" />
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10 sticky top-32 h-[80vh] flex flex-col items-center justify-between">
         
-        {/* Section Header */}
-        <div className="flex justify-between items-end mb-16 md:mb-24">
-          <h2 className="font-bebas text-4xl md:text-6xl tracking-wider uppercase text-[#111111]/80">MY TOOLKIT</h2>
-          <span className="font-mono text-xs text-[#111111]/40 tracking-widest uppercase">04 / STACK</span>
+        {/* Header */}
+        <div className="flex flex-col items-center text-center gap-4">
+          <span className="font-mono text-[10px] tracking-widest uppercase opacity-50">04 / ECOSYSTEM</span>
+          <h2 className="font-bebas text-6xl md:text-8xl tracking-wider uppercase">MY TOOLKIT</h2>
         </div>
 
-        {/* Intro */}
-        <div className="mb-24">
-          <p className="font-mono text-sm tracking-widest text-[#111111]/60 mb-4">I BUILD ACROSS</p>
-          <h3 className="font-bebas text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.85] text-[#111111]">
-            FRONTEND, BACKEND, AI / ML, DATABASES, DESIGN, MOTION, TECHNOLOGY SYSTEMS.
-          </h3>
-        </div>
-
-        {/* Toolkit Visualization */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-12 flex-1 items-center">
+        {/* Interactive Radial System */}
+        <div className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] flex items-center justify-center my-12">
           
-          {/* LEFT: Radial Diagram & Info Panel */}
-          <div className="relative w-full aspect-square flex items-center justify-center">
-            
-            {/* Info Panel (Dynamic based on hover) */}
-            <div className="absolute top-0 left-0 w-full flex justify-between items-start">
-              <div className="flex flex-col gap-2">
-                <motion.h4 
-                  key={activeSkill.skill}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="font-bebas text-5xl md:text-6xl text-[#111111]"
-                >
-                  {activeSkill.skill}
-                </motion.h4>
-                <motion.span 
-                  key={activeSkill.category}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="font-mono text-xs tracking-widest uppercase text-accent"
-                >
-                  {activeSkill.category}
-                </motion.span>
-              </div>
+          <motion.div 
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ scale: radialScale, opacity: radialOpacity, rotate: radialRotate }}
+          >
+            {/* Center Node */}
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border border-current flex items-center justify-center z-20 bg-[#F1EFEA]">
+              <span className="font-bebas text-2xl md:text-3xl tracking-widest">NIMISH</span>
             </div>
 
-            {/* Radial Diagram */}
-            <motion.div 
-              className="relative w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-full border border-[#111111]/10 flex items-center justify-center pointer-events-none"
-              style={{ rotate: radialRotation }}
-            >
-              <div className="absolute w-full h-full border border-[#111111]/5 rounded-full scale-[1.3]" />
-              <div className="absolute w-full h-full border border-[#111111]/5 rounded-full scale-[1.6]" />
-              
-              {/* Center */}
-              <div className="font-bebas text-3xl tracking-widest text-[#111111]">NIMISH</div>
+            {/* Orbiting Domains */}
+            {ECOSYSTEM.map((eco, i) => {
+              const radius = window.innerWidth < 768 ? 120 : 200;
+              const rad = (eco.angle * Math.PI) / 180;
+              const x = Math.cos(rad) * radius;
+              const y = Math.sin(rad) * radius;
 
-              {/* Orbiting Categories */}
-              {skillsData.map((cat, i) => {
-                const angle = (i / skillsData.length) * 360;
-                const radius = 180; // Distance from center
-                const x = Math.cos((angle * Math.PI) / 180) * radius;
-                const y = Math.sin((angle * Math.PI) / 180) * radius;
-                return (
-                  <div
-                    key={cat.title}
-                    className="absolute font-mono text-[10px] tracking-widest uppercase text-[#111111]/50 bg-[#EAEAEA] px-2"
-                    style={{
-                      transform: `translate(${x}px, ${y}px) rotate(${-angle}deg)`,
-                      // We inverse the rotation of the parent to keep text readable
+              return (
+                <div key={eco.domain} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  {/* Connection Line */}
+                  <motion.div 
+                     className="absolute origin-left h-[1px] opacity-20"
+                     style={{ 
+                       width: radius, 
+                       rotate: eco.angle,
+                       backgroundColor: textColor 
+                     }}
+                  />
+                  
+                  {/* Domain Node */}
+                  <div 
+                    className="absolute pointer-events-auto cursor-pointer flex flex-col items-center gap-2 group"
+                    style={{ transform: `translate(${x}px, ${y}px) rotate(${-eco.angle}deg)` }}
+                    onMouseEnter={() => {
+                      setActiveDomain(eco);
+                      setCursorVariant("hover");
+                    }}
+                    onMouseLeave={() => {
+                      setActiveDomain(null);
+                      setCursorVariant("default");
                     }}
                   >
-                    {cat.title}
+                    <div className={`w-3 h-3 rounded-full border border-current transition-colors ${activeDomain?.domain === eco.domain ? 'bg-current' : 'bg-transparent'}`} />
+                    <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase bg-[#F1EFEA] px-2 py-1 rounded">
+                      {eco.domain}
+                    </span>
                   </div>
-                );
-              })}
-            </motion.div>
-          </div>
-
-          {/* RIGHT: Technology Matrix */}
-          <motion.div 
-            className="w-full flex flex-wrap gap-3 md:gap-4 content-start"
-            style={{ y: matrixY }}
-          >
-            {allSkills.map((item, i) => (
-              <motion.div
-                key={item.skill + i}
-                onMouseEnter={() => {
-                  setActiveSkill(item);
-                  setCursorVariant("text");
-                  setCursorText("VIEW");
-                }}
-                onMouseLeave={() => {
-                  setCursorVariant("default");
-                  setCursorText("");
-                }}
-                className={`px-4 py-3 border rounded-sm font-mono text-xs md:text-sm tracking-wide cursor-pointer transition-colors duration-300 ${
-                  activeSkill.skill === item.skill
-                    ? "border-[#111111] bg-[#111111] text-[#EAEAEA]"
-                    : "border-[#111111]/20 text-[#111111]/70 hover:border-[#111111]/60"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {item.skill}
-              </motion.div>
-            ))}
+                </div>
+              );
+            })}
           </motion.div>
+
+          {/* Expanded Technologies Tooltip (Centered) */}
+          <AnimatePresence>
+            {activeDomain && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex flex-col gap-2 p-6 bg-white border shadow-xl rounded-xl"
+                style={{ borderColor }}
+              >
+                <span className="font-mono text-[9px] tracking-widest uppercase opacity-50 mb-2">{activeDomain.domain} STACK</span>
+                {activeDomain.tech.map(t => (
+                  <span key={t} className="font-bebas text-2xl md:text-3xl tracking-wide opacity-90 whitespace-nowrap">
+                    {t}
+                  </span>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
         </div>
+
+        {/* Transition into Projects */}
+        <motion.div 
+          className="flex flex-col items-center text-center gap-4 mt-auto mb-12"
+          style={{ opacity: projectTagOpacity, scale: projectTagScale }}
+        >
+          <span className="font-mono text-[10px] tracking-widest uppercase opacity-50">SCROLL DOWN TO SEE THESE IN ACTION</span>
+          <div className="px-6 py-3 border rounded-full font-bebas text-xl md:text-2xl tracking-widest uppercase flex items-center gap-3 bg-[#0D0D0F] text-[#F1EFEA]">
+            <span>PHANTOMPOST</span>
+            <span className="opacity-50">→</span>
+          </div>
+        </motion.div>
+
       </div>
-    </section>
+    </motion.section>
   );
 }
