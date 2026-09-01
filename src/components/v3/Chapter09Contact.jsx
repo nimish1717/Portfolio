@@ -32,7 +32,7 @@ export function Chapter09Contact() {
   const buildScale = useTransform(scrollYProgress, [0.4, 0.8], [0.8, 1]);
 
   useEffect(() => {
-    if (inputRef.current && step < 5) {
+    if (inputRef.current && step > 1 && step < 5) {
       inputRef.current.focus();
     }
   }, [step]);

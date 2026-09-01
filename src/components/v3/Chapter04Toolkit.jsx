@@ -96,9 +96,13 @@ export function Chapter04Toolkit() {
             style={{ scale: radialScale, opacity: radialOpacity, rotate: radialRotate }}
           >
             {/* Center Node */}
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border border-current flex items-center justify-center z-20 bg-[#F1EFEA]">
+            <motion.div 
+              animate={{ y: [-5, 5, -5] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full border border-current flex items-center justify-center z-20 bg-[#F1EFEA]"
+            >
               <span className="font-bebas text-2xl md:text-3xl tracking-widest">NIMISH</span>
-            </div>
+            </motion.div>
 
             {/* Orbiting Domains */}
             {ECOSYSTEM.map((eco, i) => {
@@ -120,7 +124,9 @@ export function Chapter04Toolkit() {
                   />
                   
                   {/* Domain Node */}
-                  <div 
+                  <motion.div 
+                    animate={{ y: [-3, 3, -3] }}
+                    transition={{ repeat: Infinity, duration: 3, delay: i * 0.5, ease: "easeInOut" }}
                     className="absolute pointer-events-auto cursor-pointer flex flex-col items-center gap-2 group"
                     style={{ transform: `translate(${x}px, ${y}px) rotate(${-eco.angle}deg)` }}
                     onMouseEnter={() => {
@@ -132,11 +138,11 @@ export function Chapter04Toolkit() {
                       setCursorVariant("default");
                     }}
                   >
-                    <div className={`w-3 h-3 rounded-full border border-current transition-colors ${activeDomain?.domain === eco.domain ? 'bg-current' : 'bg-transparent'}`} />
+                    <div className={`w-3 h-3 rounded-full border border-current transition-colors ${activeDomain?.domain === eco.domain ? 'bg-current shadow-[0_0_15px_currentColor]' : 'bg-transparent'}`} />
                     <span className="font-mono text-[10px] md:text-xs tracking-widest uppercase bg-[#F1EFEA] px-2 py-1 rounded">
                       {eco.domain}
                     </span>
-                  </div>
+                  </motion.div>
                 </div>
               );
             })}
@@ -146,10 +152,11 @@ export function Chapter04Toolkit() {
           <AnimatePresence>
             {activeDomain && (
               <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none flex flex-col gap-2 p-6 bg-white border shadow-xl rounded-xl"
+                initial={{ opacity: 0, scale: 0.8, y: "-40%" }}
+                animate={{ opacity: 1, scale: 1, y: "-50%" }}
+                exit={{ opacity: 0, scale: 0.8, y: "-40%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex flex-col gap-2 p-6 bg-white border shadow-[0_0_50px_rgba(0,0,0,0.1)] rounded-xl"
                 style={{ borderColor }}
               >
                 <span className="font-mono text-[9px] tracking-widest uppercase opacity-50 mb-2">{activeDomain.domain} STACK</span>

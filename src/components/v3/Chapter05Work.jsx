@@ -23,6 +23,7 @@ function ProjectCard({ project, index, total }) {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
   const yOffset = useTransform(scrollYProgress, [0, 1], ["0%", "5%"]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [0, -10]);
 
   const animationType = ANIMATION_TYPES[index % ANIMATION_TYPES.length];
 
@@ -30,15 +31,30 @@ function ProjectCard({ project, index, total }) {
     <motion.div 
       ref={containerRef}
       className="sticky top-0 h-screen w-full flex items-center justify-center p-6 md:p-12 overflow-hidden bg-[#0D0D0F] border-t border-white/5"
-      style={{ zIndex: index, scale, opacity, y: yOffset }}
+      style={{ zIndex: index, scale, opacity, y: yOffset, rotateX, transformPerspective: 1000, transformOrigin: "top" }}
     >
       <div className="w-full h-full max-w-7xl mx-auto flex flex-col justify-between relative">
         
         {/* TOP */}
-        <div className="flex justify-between items-start z-20 mix-blend-difference">
-           <h3 className="font-bebas text-4xl md:text-6xl tracking-wider text-white uppercase max-w-lg">
-             {project.title}
-           </h3>
+        <div className="flex justify-between items-start z-20 mix-blend-difference overflow-hidden">
+           <motion.h3 
+             initial="hidden"
+             whileInView="visible"
+             viewport={{ once: true, margin: "-10%" }}
+             variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+             className="font-bebas text-4xl md:text-6xl tracking-wider text-white uppercase max-w-lg flex flex-wrap gap-x-2"
+           >
+             {project.title.split(" ").map((word, i) => (
+               <span key={i} className="overflow-hidden inline-block">
+                 <motion.span 
+                   variants={{ hidden: { y: "100%" }, visible: { y: "0%", transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+                   className="inline-block"
+                 >
+                   {word}
+                 </motion.span>
+               </span>
+             ))}
+           </motion.h3>
            <span className="font-mono text-xs tracking-widest text-white/50 uppercase">
              0{index + 1} / 0{total}
            </span>

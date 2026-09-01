@@ -28,18 +28,45 @@ export function Chapter03About() {
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
         {/* Large Statement */}
-        <div className="mb-24 md:mb-40 flex flex-col items-center text-center">
+        <div className="mb-24 md:mb-40 flex flex-col items-center text-center overflow-hidden">
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col gap-4"
+            variants={{
+              visible: { transition: { staggerChildren: 0.1 } }
+            }}
+            className="flex flex-col gap-4 items-center"
           >
-            <span className="font-mono text-xs tracking-widest text-accent uppercase">03 / IDENTITY</span>
-            <h2 className="font-bebas text-6xl md:text-8xl lg:text-9xl tracking-tight leading-[0.85] uppercase">
-              I BUILD DIGITAL <br/>
-              <span className="text-white/40">EXPERIENCES.</span>
+            <motion.span 
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+              className="font-mono text-xs tracking-widest text-accent uppercase block overflow-hidden"
+            >
+              03 / IDENTITY
+            </motion.span>
+            
+            <h2 className="font-bebas text-6xl md:text-8xl lg:text-9xl tracking-tight leading-[0.85] uppercase flex flex-wrap justify-center gap-x-4 max-w-4xl">
+              {["I", "BUILD", "DIGITAL"].map((word, i) => (
+                <span key={i} className="overflow-hidden inline-block pb-2">
+                  <motion.span 
+                    variants={{ hidden: { y: "100%" }, visible: { y: "0%", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+                    className="inline-block origin-bottom"
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
+              <div className="w-full h-0" />
+              {["EXPERIENCES."].map((word, i) => (
+                <span key={i} className="overflow-hidden inline-block pb-2 text-white/40">
+                  <motion.span 
+                    variants={{ hidden: { y: "100%" }, visible: { y: "0%", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+                    className="inline-block origin-bottom"
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
             </h2>
           </motion.div>
         </div>
@@ -114,34 +141,58 @@ export function Chapter03About() {
             </div>
 
             {/* Bento Grid Metadata */}
-            <div className="grid grid-cols-2 gap-4">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.15 } }
+              }}
+              className="grid grid-cols-2 gap-4"
+            >
               
-              <div className="col-span-2 p-6 border border-white/10 bg-white/[0.02] flex flex-col gap-4">
-                <span className="font-mono text-[10px] tracking-widest text-accent uppercase">EDUCATION</span>
-                <h4 className="font-bebas text-3xl tracking-widest uppercase">THAPAR INSTITUTE</h4>
-                <p className="font-mono text-xs tracking-widest text-white/50 uppercase">COMPUTER ENGINEERING / 2023 - 2027</p>
-              </div>
+              <motion.div 
+                variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+                className="col-span-2 p-6 border border-white/10 bg-white/[0.02] flex flex-col gap-4 relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="font-mono text-[10px] tracking-widest text-accent uppercase relative z-10">EDUCATION</span>
+                <h4 className="font-bebas text-3xl tracking-widest uppercase relative z-10">THAPAR INSTITUTE</h4>
+                <p className="font-mono text-xs tracking-widest text-white/50 uppercase relative z-10">COMPUTER ENGINEERING / 2023 - 2027</p>
+              </motion.div>
 
-              <div className="p-6 border border-white/10 bg-white/[0.02] flex flex-col justify-between min-h-[160px]">
-                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">ACHIEVEMENT</span>
-                <h4 className="font-bebas text-2xl tracking-widest text-white/90 leading-tight">AMAZON ML<br/>SUMMER SCHOOL</h4>
-              </div>
+              <motion.div 
+                variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+                className="p-6 border border-white/10 bg-white/[0.02] flex flex-col justify-between min-h-[160px] relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase relative z-10">ACHIEVEMENT</span>
+                <h4 className="font-bebas text-2xl tracking-widest text-white/90 leading-tight relative z-10">AMAZON ML<br/>SUMMER SCHOOL</h4>
+              </motion.div>
 
-              <div className="p-6 border border-white/10 bg-white/[0.02] flex flex-col justify-between min-h-[160px]">
-                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">ACHIEVEMENT</span>
-                <h4 className="font-bebas text-2xl tracking-widest text-white/90 leading-tight">JPMORGAN<br/>CODE FOR GOOD</h4>
-              </div>
+              <motion.div 
+                variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+                className="p-6 border border-white/10 bg-white/[0.02] flex flex-col justify-between min-h-[160px] relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase relative z-10">ACHIEVEMENT</span>
+                <h4 className="font-bebas text-2xl tracking-widest text-white/90 leading-tight relative z-10">JPMORGAN<br/>CODE FOR GOOD</h4>
+              </motion.div>
 
-              <div className="col-span-2 p-6 border border-white/10 bg-white/[0.02] flex flex-col gap-4">
-                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">CURRENT FOCUS</span>
-                <div className="flex flex-wrap gap-3">
+              <motion.div 
+                variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}
+                className="col-span-2 p-6 border border-white/10 bg-white/[0.02] flex flex-col gap-4 relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase relative z-10">CURRENT FOCUS</span>
+                <div className="flex flex-wrap gap-3 relative z-10">
                   {["WEBGL", "GENERATIVE AI", "DISTRIBUTED SYSTEMS", "INTERACTION DESIGN"].map(f => (
                     <span key={f} className="font-mono text-[10px] tracking-widest text-white border border-white/20 px-3 py-1.5 rounded-full">{f}</span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-            </div>
+            </motion.div>
           </motion.div>
 
         </div>

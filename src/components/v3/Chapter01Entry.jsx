@@ -76,17 +76,13 @@ export function Chapter01Entry() {
   const metaRailOpacity = useTransform(smoothProgress, [0.75, 0.9], [1, 0]);
   
   // Intro statement "WHAT I BUILD" (State 07)
-  const whatIBuildScale = useTransform(smoothProgress, [0.8, 0.95], [0.5, 1]);
-  const whatIBuildOpacity = useTransform(smoothProgress, [0.8, 0.95], [0, 1]);
-
-  // Background shifts slightly
-  const bgOpacity = useTransform(smoothProgress, [0.8, 1], [1, 0.8]);
+  const whatIBuildScale = useTransform(scrollYProgress, [0.65, 0.85], [0.5, 1]);
+  const whatIBuildOpacity = useTransform(scrollYProgress, [0.65, 0.85], [0, 1]);
 
   return (
-    <section ref={containerRef} id="entry" className="relative w-full h-[400vh] bg-[#0D0D0F]">
+    <section ref={containerRef} id="entry" className="relative w-full h-[300vh] bg-[#0D0D0F]">
       <motion.div 
         className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center items-center pointer-events-none"
-        style={{ opacity: bgOpacity }}
       >
         
         {/* VERTICAL DATA RAIL (Left) */}

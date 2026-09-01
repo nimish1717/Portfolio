@@ -45,7 +45,7 @@ export default function Home() {
     <CursorProvider>
       <div className="grain-overlay" aria-hidden />
       <Navigation />
-      <main className="relative w-full bg-bg text-fg overflow-x-hidden selection:bg-accent selection:text-bg">
+      <main className="relative w-full bg-bg text-fg selection:bg-accent selection:text-bg">
         <Chapter01Entry />
         <Chapter02Signal />
         <Chapter03About />
