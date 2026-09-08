@@ -1,17 +1,15 @@
-"use client";
+import { motion } from 'framer-motion';
 
-import { motion } from "framer-motion";
-
-export function FadeIn({
+export default function FadeIn({
   children,
   delay = 0,
   duration = 0.7,
   x = 0,
   y = 30,
-  className = "",
-  as: Component = "div",
+  className = '',
+  as = 'div'
 }) {
-  const MotionComponent = motion.create(Component);
+  const MotionComponent = motion.create(as);
 
   return (
     <MotionComponent
@@ -21,7 +19,7 @@ export function FadeIn({
       transition={{
         duration,
         delay,
-        ease: [0.25, 0.1, 0.25, 1], // Custom sophisticated easing
+        ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}
     >

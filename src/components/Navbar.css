@@ -1,0 +1,82 @@
+.hover-link {
+  position: relative;
+  display: flex;
+  text-wrap: nowrap;
+  overflow: hidden;
+}
+
+.hover-in {
+  position: relative;
+  transition: 0.3s;
+}
+
+.hover-in div {
+  display: flex;
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.hover-link:hover .hover-in {
+  transform: translateY(-100%);
+  color: var(--accentColor);
+}
+
+.header {
+  display: flex;
+  max-width: var(--cMaxWidth);
+  width: var(--cWidth);
+  justify-content: space-between;
+  padding: 20px 0;
+  margin-bottom: -100px;
+  box-sizing: border-box;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%);
+  top: 0;
+  z-index: 9999;
+  align-items: flex-start;
+}
+
+.header-left {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.header-right ul {
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  column-gap: 20px;
+  row-gap: 5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 400;
+  align-items: flex-end;
+}
+
+@media only screen and (max-width: 768px) {
+  .header {
+    padding: 15px 0;
+  }
+
+  .header-left {
+    font-size: 12px;
+  }
+
+  .header-right ul {
+    font-size: 10px;
+    row-gap: 3px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .header-left {
+    font-size: 11px;
+  }
+}

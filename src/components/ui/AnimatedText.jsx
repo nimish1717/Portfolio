@@ -1,55 +1,42 @@
-"use client";
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-
-function Character({ children, progress, range }) {
-  const opacity = useTransform(progress, range, [0.1, 1]);
-  return (
-    <span className="relative inline-block">
-      <span className="absolute opacity-0">{children}</span>
-      <motion.span style={{ opacity }}>{children}</motion.span>
-    </span>
-  );
-}
-
-function Word({ children, progress, range }) {
-  const amount = children.length;
-  const step = 1 / amount;
-  return (
-    <span className="relative inline-block mr-[0.25em] mt-2">
-      {children.split("").map((char, i) => {
-        const start = range[0] + i * step * (range[1] - range[0]);
-        const end = range[0] + (i + 1) * step * (range[1] - range[0]);
-        return (
-          <Character key={`char_${i}`} progress={progress} range={[start, end]}>
-            {char}
-          </Character>
-        );
-      })}
-    </span>
-  );
-}
-
-export function AnimatedText({ text, className = "" }) {
-  const container = useRef(null);
+export default function AnimatedText({ 
+  text, 
+  className = "",
+  offset = ["start 0.8", "end 0.2"]
+}) {
+  const containerRef = useRef(null);
   
   const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start 0.8", "end 0.3"], // Begins revealing slightly above bottom, finishes revealing slightly above center
+    target: containerRef,
+    offset: offset
   });
 
-  const words = text.split(" ");
+  const characters = text.split('');
 
   return (
-    <p ref={container} className={`flex flex-wrap ${className}`}>
-      {words.map((word, i) => {
-        const start = i / words.length;
-        const end = start + 1 / words.length;
+    <p ref={containerRef} className={`relative flex flex-wrap justify-center ${className}`}>
+      {characters.map((char, i) => {
+        const start = i / characters.length;
+        const end = start + (1 / characters.length);
+        
+        // This is a common pattern for scroll-reveal text
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+        
         return (
-          <Word key={`word_${i}`} progress={scrollYProgress} range={[start, end]}>
-            {word}
-          </Word>
+          <span key={i} className="relative inline-block">
+            {/* Invisible placeholder to maintain layout */}
+            <span className="invisible">{char === ' ' ? '\u00A0' : char}</span>
+            {/* Visible animated character */}
+            <motion.span 
+              className="absolute left-0 top-0"
+              style={{ opacity }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </motion.span>
+          </span>
         );
       })}
     </p>

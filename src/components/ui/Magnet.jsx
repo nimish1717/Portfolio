@@ -1,76 +1,56 @@
-"use client";
+import { useRef, useState, useEffect } from 'react';
 
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useSpring } from "framer-motion";
-
-export function Magnet({
+export default function Magnet({
   children,
   padding = 150,
-  disabled = false,
-  strength = 1,
+  strength = 3,
   activeTransition = "transform 0.3s ease-out",
   inactiveTransition = "transform 0.6s ease-in-out",
-  className = "",
+  className = ""
 }) {
-  const [isActive, setIsActive] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const magnetRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    if (disabled) return;
-
     const handleMouseMove = (e) => {
       if (!magnetRef.current) return;
-
+      
       const { left, top, width, height } = magnetRef.current.getBoundingClientRect();
       const centerX = left + width / 2;
       const centerY = top + height / 2;
 
-      const distanceX = e.clientX - centerX;
-      const distanceY = e.clientY - centerY;
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+      const distX = e.clientX - centerX;
+      const distY = e.clientY - centerY;
+      const distance = Math.sqrt(distX * distX + distY * distY);
 
       if (distance < padding) {
-        setIsActive(true);
+        setIsHovering(true);
         setPosition({
-          x: distanceX * strength,
-          y: distanceY * strength,
+          x: distX / strength,
+          y: distY / strength
         });
       } else {
-        setIsActive(false);
+        setIsHovering(false);
         setPosition({ x: 0, y: 0 });
       }
     };
 
-    const handleMouseLeave = () => {
-      setIsActive(false);
-      setPosition({ x: 0, y: 0 });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [padding, disabled, strength]);
-
-  const x = useSpring(position.x, { stiffness: 150, damping: 15, mass: 0.1 });
-  const y = useSpring(position.y, { stiffness: 150, damping: 15, mass: 0.1 });
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [padding, strength]);
 
   return (
-    <motion.div
+    <div
       ref={magnetRef}
-      className={className}
+      className={`inline-block ${className}`}
       style={{
-        x,
-        y,
-        transition: isActive ? activeTransition : inactiveTransition,
-        willChange: "transform",
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+        transition: isHovering ? activeTransition : inactiveTransition,
+        willChange: 'transform'
       }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
