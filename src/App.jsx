@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Lenis from 'lenis';
 import LoadingScreen from './components/LoadingScreen';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import Hero from './components/Hero/Hero';
 import About from './components/About';
 import Career from './components/Career';
 import TechStack from './components/TechStack';
