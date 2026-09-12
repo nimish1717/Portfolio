@@ -1,79 +1,80 @@
 .currently-section {
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  background: var(--ink-2);
+  border-top: 1px solid var(--line);
 }
 
-.currently-label-row  { margin-bottom: 32px; }
-.currently-heading-wrap { margin-bottom: 72px; }
-.currently-heading    { color: var(--fg); }
+.curr-label-row { margin-bottom: 28px; }
 
-.currently-grid {
+.curr-heading {
+  color: var(--bone);
+  margin-bottom: 56px;
+}
+
+.curr-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  grid-template-columns: repeat(3,1fr);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
   overflow: hidden;
 }
 
-.currently-block {
-  padding: 40px 32px;
-  background: var(--bg-card);
+.curr-block {
+  padding: 36px 28px;
+  background: var(--ink-2);
+  border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   transition: background 0.3s;
 }
 
-.currently-block:hover {
-  background: var(--bg-elevated);
-}
+.curr-block:last-child { border-right: none; }
+.curr-block:hover { background: var(--ink-3); }
 
-.currently-block-top {
+.curr-block-top {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.currently-emoji {
-  font-size: 1.8rem;
-  line-height: 1;
-}
+.curr-num { color: var(--tide) !important; }
 
-.currently-block-title {
+.curr-word {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
   font-weight: 700;
-  color: var(--fg);
   letter-spacing: -0.02em;
+  color: var(--bone);
 }
 
-.currently-list {
+.curr-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.currently-item {
+.curr-item {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 10px;
   font-family: var(--font-body);
-  font-size: clamp(0.82rem, 1.1vw, 0.92rem);
-  color: var(--fg-muted);
+  font-size: 0.85rem;
   line-height: 1.5;
+  color: var(--mist);
 }
 
-.currently-dot {
-  color: var(--accent);
-  font-size: 0.7rem;
+.curr-arrow {
+  color: var(--tide);
+  font-size: 0.75rem;
   flex-shrink: 0;
   margin-top: 1px;
 }
 
 @media (max-width: 900px) {
-  .currently-grid {
+  .curr-grid {
     grid-template-columns: 1fr;
   }
+  .curr-block { border-right: none; border-bottom: 1px solid var(--line); }
+  .curr-block:last-child { border-bottom: none; }
 }

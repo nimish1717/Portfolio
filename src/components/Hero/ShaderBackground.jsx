@@ -103,15 +103,15 @@ void main() {
   // Normalize to 0..1
   n = n * 0.5 + 0.5;
 
-  // Color palette: very dark base → soft violet wisps
-  vec3 dark   = vec3(0.027, 0.027, 0.031);          // #070708
-  vec3 violet = vec3(0.306, 0.271, 0.847);           // #4E45D8 — muted violet
-  vec3 indigo = vec3(0.18,  0.12,  0.55);            // deep indigo
-  vec3 warm   = vec3(0.08,  0.06,  0.18);            // near-black indigo
+  // Color palette: very dark base → warm amber/orange wisps
+  vec3 dark   = vec3(0.04, 0.03, 0.02);          // Very deep warm black
+  vec3 warm   = vec3(0.12, 0.05, 0.02);          // Deep amber/brown
+  vec3 amber  = vec3(0.45, 0.20, 0.05);          // Rich amber/orange
+  vec3 orange = vec3(0.85, 0.40, 0.15);          // Bright cinematic orange highlight
 
   vec3 col = mix(dark, warm,   smoothstep(0.0, 0.45, n));
-      col = mix(col,  indigo, smoothstep(0.42, 0.68, n));
-      col = mix(col,  violet, smoothstep(0.65, 0.85, n) * 0.4);
+      col = mix(col,  amber,  smoothstep(0.42, 0.68, n));
+      col = mix(col,  orange, smoothstep(0.65, 0.85, n) * 0.35);
 
   // Subtle vignette
   float vig = 1.0 - smoothstep(0.3, 1.1, length(uv - 0.5) * 1.6);

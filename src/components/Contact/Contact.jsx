@@ -6,52 +6,40 @@ import './Contact.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SOCIALS = [
-  { label: 'GitHub',    href: 'https://github.com/nimish1717',    id: 'contact-github' },
-  { label: 'LinkedIn',  href: 'https://linkedin.com/in/nimish-agrawal', id: 'contact-linkedin' },
-  { label: 'Instagram', href: 'https://instagram.com/',            id: 'contact-instagram' },
-];
+const EMAIL    = 'nimish.agrawal@thapar.edu';
+const GITHUB   = 'https://github.com/nimish1717';
+const LINKEDIN = 'https://linkedin.com/in/nimish-agrawal';
 
-const EMAIL = 'nimish.agrawal@thapar.edu';
+// Split "LET'S BUILD SOMETHING." into characters
+const CTA_LINES = ["LET'S BUILD", 'SOMETHING.'];
 
 export default function Contact() {
   const sectionRef = useRef(null);
-  const headingRef = useRef(null);
+  const ctaRef     = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Heading chars stagger in on scroll
-      const chars = headingRef.current?.querySelectorAll('.cta-char');
+      const chars = ctaRef.current?.querySelectorAll('.cta-ch');
       if (chars?.length) {
         gsap.fromTo(
           chars,
-          { y: '105%', opacity: 0 },
+          { y: '110%', opacity: 0 },
           {
             y: '0%',
             opacity: 1,
-            duration: 0.65,
-            stagger: 0.025,
+            stagger: 0.022,
+            duration: 0.6,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top 75%',
-              toggleActions: 'play none none none',
+              start: 'top 72%',
             },
           }
         );
       }
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
-
-  // Split a string into char spans
-  const splitToChars = (text) =>
-    text.split('').map((ch, i) => (
-      <span key={i} className="cta-char" style={{ display: 'inline-block' }} aria-hidden="true">
-        {ch === ' ' ? '\u00A0' : ch}
-      </span>
-    ));
 
   return (
     <section ref={sectionRef} id="contact" className="section contact-section">
@@ -59,76 +47,69 @@ export default function Contact() {
 
         {/* Label */}
         <div className="contact-label-row">
-          <span className="label">07 / Contact</span>
+          <span className="t-label" style={{ color: 'var(--dim)' }}>07 / Contact</span>
         </div>
 
-        {/* Big CTA heading */}
+        {/* Secondary text */}
+        <p className="contact-sub t-body">
+          Have an idea, project, or opportunity?
+        </p>
+
+        {/* Huge CTA — character split */}
         <div
-          ref={headingRef}
-          className="contact-cta-heading"
-          aria-label="Let's build something interesting."
+          ref={ctaRef}
+          className="contact-cta"
+          aria-label="Let's build something."
         >
-          <div className="clip-line contact-cta-line">
-            <span className="display-xl contact-cta-text">
-              {splitToChars("Let's build")}
-            </span>
-          </div>
-          <div className="clip-line contact-cta-line contact-cta-line--indent">
-            <span className="display-xl contact-cta-text contact-cta-text--accent">
-              {splitToChars('something')}
-            </span>
-          </div>
-          <div className="clip-line contact-cta-line">
-            <span className="display-xl contact-cta-text">
-              {splitToChars('interesting.')}
-            </span>
-          </div>
+          {CTA_LINES.map((line, li) => (
+            <div key={li} className="clip-line contact-cta-line">
+              <span className="contact-huge" aria-hidden="true">
+                {line.split('').map((ch, ci) => (
+                  <span key={ci} className="cta-ch" style={{ display: 'inline-block' }}>
+                    {ch === ' ' ? '\u00A0' : ch}
+                  </span>
+                ))}
+              </span>
+            </div>
+          ))}
         </div>
 
-        {/* Email CTA */}
-        <div className="contact-email-row">
-          <Magnet strength={15}>
+        {/* Buttons */}
+        <div className="contact-btns">
+          <Magnet strength={18}>
             <a
               href={`mailto:${EMAIL}`}
-              className="contact-email-link btn-solid"
+              className="btn btn-primary contact-btn"
               id="contact-email"
-              aria-label={`Send email to ${EMAIL}`}
+              data-cursor="link"
             >
-              {EMAIL} ↗
+              EMAIL <span className="btn-arrow-icon">↗</span>
             </a>
           </Magnet>
-        </div>
-
-        {/* Divider */}
-        <div className="divider contact-divider" />
-
-        {/* Footer row */}
-        <div className="contact-footer">
-          {/* Social links */}
-          <div className="contact-socials">
-            {SOCIALS.map((s) => (
-              <Magnet key={s.label} strength={12}>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-social-link"
-                  id={s.id}
-                  aria-label={`Visit ${s.label} profile`}
-                >
-                  {s.label} ↗
-                </a>
-              </Magnet>
-            ))}
-          </div>
-
-          {/* Copyright */}
-          <p className="contact-copy">
-            © {new Date().getFullYear()} Nimish Agrawal<br />
-            <span style={{ color: 'var(--fg-dim)' }}>
-              Designed &amp; developed by Nimish
-            </span>
-          </p>
+          <Magnet strength={18}>
+            <a
+              href={GITHUB}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost contact-btn"
+              id="contact-github"
+              data-cursor="link"
+            >
+              GITHUB <span className="btn-arrow-icon">↗</span>
+            </a>
+          </Magnet>
+          <Magnet strength={18}>
+            <a
+              href={LINKEDIN}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost contact-btn"
+              id="contact-linkedin"
+              data-cursor="link"
+            >
+              LINKEDIN <span className="btn-arrow-icon">↗</span>
+            </a>
+          </Magnet>
         </div>
 
       </div>

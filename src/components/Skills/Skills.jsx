@@ -1,77 +1,122 @@
-import FadeIn from '../ui/FadeIn';
-import MarqueeText from '../ui/MarqueeText';
+import { useState, useRef, useEffect } from 'react';
+import { SKILLS, SKILL_SIZE_MAP } from '../../data/skills.js';
 import './Skills.css';
 
-const ROW_1 = [
-  'C++', 'JavaScript', 'TypeScript', 'Python', 'SQL',
-  'React', 'Next.js', 'Node.js', 'Express', 'Three.js',
-];
-
-const ROW_2 = [
-  'MongoDB', 'PostgreSQL', 'Tailwind CSS', 'GSAP', 'Framer Motion',
-  'Docker', 'Git', 'REST API', 'Vite', 'Figma',
-];
-
-function SkillPill({ name }) {
-  return (
-    <span className="skill-pill" role="listitem">
-      {name}
-    </span>
-  );
-}
-
+/**
+ * Spatial typography skills section.
+ * Skills distributed in a free-flow wrap layout.
+ * Size conveys importance. Hover: active skill becomes dominant,
+ * others dim. Mouse parallax adds depth.
+ */
 export default function Skills() {
+  const [hovered, setHovered] = useState(null);
+  const containerRef = useRef(null);
+  const itemRefs = useRef([]);
+
+  // Mouse parallax — subtle
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onMove = (e) => {
+      const rect = container.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dx = (e.clientX - cx) / rect.width;
+      const dy = (e.clientY - cy) / rect.height;
+
+      itemRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const depth = (i % 3) * 0.4 + 0.3; // 0.3 – 1.1
+        el.style.transform = `translate(${dx * 8 * depth}px, ${dy * 6 * depth}px)`;
+      });
+    };
+
+    const onLeave = () => {
+      itemRefs.current.forEach((el) => {
+        if (el) el.style.transform = '';
+      });
+    };
+
+    container.addEventListener('mousemove', onMove);
+    container.addEventListener('mouseleave', onLeave);
+    return () => {
+      container.removeEventListener('mousemove', onMove);
+      container.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
+  const hasHover = hovered !== null;
+
   return (
     <section id="skills" className="section skills-section">
       <div className="container">
 
         {/* Label */}
-        <FadeIn y={20} className="skills-label-row">
-          <span className="label">05 / Skills</span>
-        </FadeIn>
+        <div className="skills-label-row">
+          <span className="t-label" style={{ color: 'var(--dim)' }}>05 / Skills</span>
+        </div>
 
         {/* Heading */}
-        <FadeIn y={50} delay={0.05} className="skills-heading-wrap">
-          <h2 className="display-lg skills-heading">
-            Tech<br />
-            <span className="gradient-text">Stack</span>
-          </h2>
-        </FadeIn>
+        <h2 className="t-display skills-heading">
+          What I<br />
+          <span style={{ color: 'var(--mist)' }}>work&nbsp;with</span>
+        </h2>
 
-      </div>
+        {/* Spatial skill cloud */}
+        <div
+          ref={containerRef}
+          className={`skills-container${hasHover ? ' has-hover' : ''}`}
+          role="list"
+          aria-label="Tech skills"
+        >
+          {SKILLS.map((skill, i) => {
+            const sty = SKILL_SIZE_MAP[skill.size];
+            return (
+              <span
+                key={skill.name}
+                ref={(el) => (itemRefs.current[i] = el)}
+                className={`skill-item${hovered === i ? ' hovered' : ''}`}
+                style={{
+                  fontSize:   sty.fontSize,
+                  fontWeight: sty.fontWeight,
+                  transition: `transform 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s, opacity 0.3s`,
+                }}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                role="listitem"
+                aria-label={`${skill.name} — ${skill.category}`}
+              >
+                {skill.name}
+              </span>
+            );
+          })}
+        </div>
 
-      {/* Marquee rows — full bleed */}
-      <div className="skills-marquee-section" role="list" aria-label="Tech skills">
-        <FadeIn y={30} delay={0.1} className="skills-row-wrap">
-          <MarqueeText speed={35} gap={12}>
-            {ROW_1.map((s) => <SkillPill key={s} name={s} />)}
-          </MarqueeText>
-        </FadeIn>
+        {/* Hovered category label */}
+        <div className="skills-category-label t-label">
+          {hovered !== null
+            ? `${SKILLS[hovered].name} · ${SKILLS[hovered].category}`
+            : <>&nbsp;</>
+          }
+        </div>
 
-        <FadeIn y={30} delay={0.2} className="skills-row-wrap">
-          <MarqueeText speed={28} reverse gap={12}>
-            {ROW_2.map((s) => <SkillPill key={s} name={s} />)}
-          </MarqueeText>
-        </FadeIn>
-      </div>
-
-      <div className="container">
-        {/* Stat row */}
-        <FadeIn y={30} delay={0.15} className="skills-stats">
+        {/* Stats row */}
+        <div className="skills-stats">
           {[
-            { value: '2+', label: 'Years coding' },
-            { value: '5+', label: 'Projects shipped' },
-            { value: '17+', label: 'Technologies' },
-            { value: '2', label: 'Industry selections' },
+            { val: '2+',  label: 'Years coding'       },
+            { val: '5+',  label: 'Projects shipped'   },
+            { val: '17+', label: 'Technologies'       },
+            { val: '2',   label: 'Industry selections'},
           ].map((s) => (
             <div key={s.label} className="skills-stat">
-              <span className="skills-stat-val">{s.value}</span>
-              <span className="label">{s.label}</span>
+              <span className="skills-stat-val">{s.val}</span>
+              <span className="t-label">{s.label}</span>
             </div>
           ))}
-        </FadeIn>
-      </div>
+        </div>
 
+      </div>
     </section>
   );
 }

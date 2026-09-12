@@ -1,0 +1,197 @@
+.hero-blocks-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none; /* Let clicks pass through empty space */
+}
+
+.hero-blocks-layer > * {
+  position: absolute;
+  pointer-events: auto; /* Re-enable clicks for blocks themselves */
+}
+
+/* ─────────────────────────────────────────
+   Left Block
+───────────────────────────────────────── */
+.hero-block-left {
+  top: 25%;
+  left: 5vw;
+  max-width: 280px;
+}
+
+.block-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.8vw, 2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  margin-bottom: 16px;
+}
+
+.block-desc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--mist);
+  margin-bottom: 24px;
+}
+
+.block-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--tide);
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.block-cta-link:hover {
+  color: var(--bone);
+}
+
+.block-cta-link .arrow {
+  transition: transform 0.3s var(--ease-out-expo);
+}
+.block-cta-link:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ─────────────────────────────────────────
+   Right Block
+───────────────────────────────────────── */
+.hero-block-right {
+  top: 30%;
+  right: 5vw;
+  max-width: 220px;
+  text-align: right;
+}
+
+.block-heading-sm {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.4vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  margin-bottom: 12px;
+}
+
+.block-desc-sm {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--mist);
+}
+
+/* ─────────────────────────────────────────
+   Glass Cards Base
+───────────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  color: var(--bone);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ─────────────────────────────────────────
+   Bottom Left CTA Card
+───────────────────────────────────────── */
+.hero-card-left {
+  bottom: 40px;
+  left: 5vw;
+}
+
+.cta-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.cta-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cta-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bone);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.cta-card:hover .cta-icon {
+  transform: rotate(45deg);
+}
+
+/* ─────────────────────────────────────────
+   Bottom Right Info Card
+───────────────────────────────────────── */
+.hero-card-right {
+  bottom: 40px;
+  right: 5vw;
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  color: var(--dim);
+}
+
+.info-text {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--mist);
+}
+
+/* ─────────────────────────────────────────
+   Mobile Adjustments
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-block-left {
+    top: 100px;
+    left: 24px;
+    max-width: 70%;
+  }
+  
+  .hero-block-right {
+    display: none; /* Hide on mobile to focus on subject */
+  }
+
+  .hero-card-left {
+    bottom: 24px;
+    left: 24px;
+  }
+  
+  .hero-card-right {
+    display: none; /* Hide secondary info card on mobile */
+  }
+}

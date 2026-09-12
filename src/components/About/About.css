@@ -1,87 +1,98 @@
 .about-section {
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  background: var(--ink);
+  border-top: 1px solid var(--line);
 }
 
 .about-label-row {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 48px;
+  gap: 20px;
+  margin-bottom: 56px;
 }
 
 .about-line {
   flex: 1;
   height: 1px;
-  background: var(--border-hover);
-  transform-origin: left center;
+  background: var(--line);
 }
 
 .about-heading-wrap {
   margin-bottom: 80px;
+  overflow: hidden;
 }
 
 .about-heading {
-  color: var(--fg);
+  color: var(--bone);
+}
+
+.about-heading em {
+  font-style: italic;
+  color: var(--mist);
 }
 
 .about-body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 80px;
   align-items: start;
+  margin-bottom: 80px;
 }
 
-/* Paragraph */
-.about-para-col {
-  padding-top: 8px;
-}
-
+/* Focus Reveal paragraph */
 .about-para {
-  font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  font-weight: 400;
-  line-height: 1.65;
-  color: var(--fg-muted);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  color: var(--bone);
 }
 
-.about-word {
-  display: inline;
-  transition: color 0.2s, opacity 0.2s;
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
 }
 
 /* Info blocks */
 .about-info-col {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 0;
 }
 
 .about-info-block {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--border);
+  gap: 12px;
 }
 
-.about-info-block:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
+.about-info-block:first-child { padding-top: 0; }
+.about-info-block:last-child  { border-bottom: none; }
+
+.about-info-label { color: var(--tide); }
 
 .about-info-text {
   font-family: var(--font-body);
-  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
-  font-weight: 400;
-  line-height: 1.6;
-  color: var(--fg);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--mist);
 }
 
-.about-info-sub {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: var(--fg-muted);
+/* Statement */
+.about-statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mist);
+  border-top: 1px solid var(--line);
+  padding-top: 48px;
 }
 
 @media (max-width: 900px) {

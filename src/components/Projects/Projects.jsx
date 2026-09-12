@@ -1,148 +1,147 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import FadeIn from '../ui/FadeIn';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PROJECTS } from '../../data/projects.js';
 import Magnet from '../ui/Magnet';
 import './Projects.css';
 
-const PROJECTS = [
-  {
-    num: '01',
-    name: 'PhantomPost',
-    category: 'Full-Stack · Social Platform',
-    year: '2024',
-    description:
-      'An anonymous social platform where users can post, react, and connect without revealing identity. Built with real-time features, moderation, and a polished UI.',
-    tech: ['React', 'Node.js', 'Express', 'MongoDB', 'Socket.io'],
-    link: '#',
-    color: '#2D1B69',    // deep violet card accent
-    accent: '#7C6EF8',
-  },
-  {
-    num: '02',
-    name: 'JobPortal',
-    category: 'Full-Stack · SaaS Platform',
-    year: '2024',
-    description:
-      'End-to-end job listing and application platform with recruiter dashboards, resume uploads, and candidate tracking — deployed and live.',
-    tech: ['React', 'Express', 'PostgreSQL', 'Tailwind', 'JWT'],
-    link: '#',
-    color: '#0D2137',
-    accent: '#38BDF8',
-  },
-  {
-    num: '03',
-    name: 'ML Analytics',
-    category: 'Machine Learning · Data Science',
-    year: '2026',
-    description:
-      'A data analysis dashboard built during the Amazon ML Summer School. Applies supervised learning models to real-world datasets with interactive visualisations.',
-    tech: ['Python', 'scikit-learn', 'Pandas', 'React', 'Recharts'],
-    link: '#',
-    color: '#1A1208',
-    accent: '#F59E0B',
-  },
-];
+const EASE = [0.16, 1, 0.3, 1];
 
-function ProjectCard({ project, index, total }) {
+/**
+ * Expanded Cards — rail of tall slivers.
+ * Hovering one widens it into a full card.
+ * Neighbours compress.
+ * Active card reveals full content.
+ * Text is laid out at the open width so it never rewraps.
+ */
+function ProjectCard({ project, isActive, onActivate, isMobile }) {
   const cardRef = useRef(null);
 
-  // Scale down slightly as next card overlaps
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start start', 'end start'],
-  });
-  const targetScale = 1 - (total - 1 - index) * 0.025;
-  const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+  const handleInteract = () => onActivate(project.id);
 
   return (
     <div
       ref={cardRef}
-      className="project-sticky-slot"
-      style={{ top: `calc(80px + ${index * 24}px)` }}
+      className={`exp-card-sliver${isActive ? ' active' : ''}`}
+      style={{ '--card-color': project.color, '--card-accent': project.accent }}
+      onClick={handleInteract}
+      onMouseEnter={!isMobile ? handleInteract : undefined}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleInteract()}
+      aria-expanded={isActive}
+      aria-label={`Project: ${project.name}`}
+      data-cursor="project"
     >
-      <motion.article
-        className="project-card pcard"
-        style={{ scale }}
-        aria-label={`Project: ${project.name}`}
-      >
-        {/* Card top row */}
-        <div className="pcard-top">
-          <div className="pcard-meta">
-            <span className="label">{project.num}</span>
-            <span className="label" style={{ color: 'var(--fg-dim)' }}>/ {project.category}</span>
-          </div>
-          <span className="label">{project.year}</span>
+      {/* Background */}
+      <div
+        className="exp-card-bg"
+        style={{
+          background: `radial-gradient(ellipse 80% 80% at 30% 70%, ${project.accent}20 0%, ${project.color} 65%)`,
+        }}
+      />
+
+      {/* Subtle grid lines on card */}
+      <div className="exp-card-grid" aria-hidden="true" />
+
+      {/* Number — vertical when collapsed, horizontal when open */}
+      <div className="exp-card-num t-label">
+        {project.num}
+      </div>
+
+      {/* Collapsed: vertical title */}
+      <div className="exp-card-vertical-name" aria-hidden={isActive}>
+        <span>{project.name}</span>
+      </div>
+
+      {/* Expanded content */}
+      <div className="exp-card-content">
+        {/* Top row */}
+        <div className="exp-card-top">
+          <span className="t-label" style={{ color: project.accent }}>
+            {project.category}
+          </span>
+          <span className="t-label">{project.year}</span>
         </div>
 
-        {/* Title */}
-        <h3 className="pcard-title" style={{ '--card-accent': project.accent }}>
-          {project.name}
-        </h3>
+        {/* Project name */}
+        <h3 className="exp-card-name">{project.name}</h3>
 
-        {/* Divider */}
-        <div className="divider pcard-divider" />
+        {/* Tagline */}
+        <p className="exp-card-tagline">{project.tagline}</p>
 
-        {/* Bottom */}
-        <div className="pcard-bottom">
-          <p className="pcard-desc">{project.description}</p>
+        {/* Description */}
+        <p className="exp-card-desc t-body">{project.description}</p>
 
-          <div className="pcard-right">
-            {/* Tech pills */}
-            <div className="pcard-tags">
-              {project.tech.map((t) => (
-                <span key={t} className="pcard-tag">{t}</span>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <Magnet strength={20}>
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline pcard-btn"
-                id={`project-link-${index + 1}`}
-                aria-label={`View ${project.name} live`}
-              >
-                View Live ↗
-              </a>
-            </Magnet>
-          </div>
+        {/* Tech */}
+        <div className="exp-card-tech">
+          {project.tech.map((t) => (
+            <span key={t} className="exp-card-tag">{t}</span>
+          ))}
         </div>
 
-        {/* Colored glow strip at top of card */}
-        <div
-          className="pcard-glow"
-          style={{ background: `linear-gradient(90deg, ${project.accent}22, transparent)` }}
-          aria-hidden="true"
-        />
-      </motion.article>
+        {/* CTA */}
+        <Magnet strength={12}>
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost exp-card-btn"
+            id={`project-link-${project.id}`}
+            data-cursor="link"
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`View ${project.name} live`}
+          >
+            View Project <span className="btn-arrow-icon">↗</span>
+          </a>
+        </Magnet>
+      </div>
     </div>
   );
 }
 
 export default function Projects() {
+  const [activeId, setActiveId] = useState(PROJECTS[0].id);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const handleActivate = (id) => setActiveId(id);
+
   return (
     <section id="projects" className="section projects-section">
       <div className="container">
 
-        {/* Section label */}
-        <FadeIn y={20} className="projects-label-row">
-          <span className="label">03 / Selected Work</span>
-        </FadeIn>
-
-        {/* Large heading */}
-        <FadeIn y={60} delay={0.05} className="projects-heading-wrap">
-          <h2 className="display-lg projects-heading">
+        {/* Header */}
+        <div className="projects-header">
+          <div className="projects-label-row">
+            <span className="t-label" style={{ color: 'var(--dim)' }}>03 / Selected Work</span>
+          </div>
+          <h2 className="t-display projects-heading">
             Selected<br />
-            <span className="gradient-text">Work</span>
+            <span style={{ color: 'var(--mist)' }}>Work</span>
           </h2>
-        </FadeIn>
+        </div>
 
-        {/* Sticky stacking cards */}
-        <div className="projects-cards-wrap">
-          {PROJECTS.map((proj, i) => (
-            <ProjectCard key={proj.num} project={proj} index={i} total={PROJECTS.length} />
+        {/* Expanded Cards rail */}
+        <div className="exp-cards-rail" role="list">
+          {PROJECTS.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isActive={activeId === project.id}
+              onActivate={handleActivate}
+              isMobile={isMobile}
+            />
+          ))}
+        </div>
+
+        {/* Mobile: project index dots */}
+        <div className="projects-dots" aria-hidden="true">
+          {PROJECTS.map((p) => (
+            <button
+              key={p.id}
+              className={`projects-dot${activeId === p.id ? ' active' : ''}`}
+              onClick={() => setActiveId(p.id)}
+              aria-label={`Select project ${p.name}`}
+            />
           ))}
         </div>
 

@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import Lenis from 'lenis';
+import { useState, useEffect } from 'react';
+import { useLenis } from './hooks/useLenis';
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import CustomCursor from './components/Cursor/CustomCursor';
-import Navbar from './components/Navbar/Navbar';
+import MeshFlow from './components/Background/MeshFlow';
+import Navbar from './components/Navigation/Navbar';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
 import Projects from './components/Projects/Projects';
@@ -10,46 +11,21 @@ import Experience from './components/Experience/Experience';
 import Skills from './components/Skills/Skills';
 import Currently from './components/Currently/Currently';
 import Contact from './components/Contact/Contact';
+import Footer from './components/Footer/Footer';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
-  const lenisRef = useRef(null);
 
+  // Enable Lenis only after load
+  useLenis(loaded);
+
+  // --vh for mobile viewport
   useEffect(() => {
-    if (!loaded) return;
-
-    const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 1.8,
-      infinite: false,
-    });
-
-    lenisRef.current = lenis;
-
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => lenis.destroy();
-  }, [loaded]);
-
-  // --vh for mobile
-  useEffect(() => {
-    const setVh = () => {
-      document.documentElement.style.setProperty('--vh', window.innerHeight + 'px');
-    };
-    setVh();
-    window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
+    const set = () =>
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight}px`);
+    set();
+    window.addEventListener('resize', set);
+    return () => window.removeEventListener('resize', set);
   }, []);
 
   return (
@@ -60,8 +36,12 @@ function App() {
 
       {loaded && (
         <>
+          {/* Global dot-grid background */}
+          <MeshFlow />
+
           <Navbar />
-          <main>
+
+          <main style={{ position: 'relative', zIndex: 1 }}>
             <Hero />
             <About />
             <Projects />
@@ -70,6 +50,8 @@ function App() {
             <Currently />
             <Contact />
           </main>
+
+          <Footer />
         </>
       )}
     </>

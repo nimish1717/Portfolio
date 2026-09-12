@@ -1,30 +1,34 @@
-import FadeIn from '../ui/FadeIn';
 import './Currently.css';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const BLOCKS = [
   {
-    emoji: '🔨',
-    heading: 'Building',
+    word: 'Building',
+    num: '01',
     items: [
       'Full-stack web applications',
       'Creative web experiments',
-      "Portfolio (you\u2019re looking at it)",
-      'Developer tooling side-projects',
+      'This portfolio',
+      'Side-projects and tooling',
     ],
   },
   {
-    emoji: '📖',
-    heading: 'Learning',
+    word: 'Learning',
+    num: '02',
     items: [
       'System design at scale',
       'Advanced algorithms & DSA',
-      'WebGL / GLSL shaders',
-      'Distributed systems fundamentals',
+      'WebGL & GLSL shaders',
+      'Distributed systems',
     ],
   },
   {
-    emoji: '🌐',
-    heading: 'Exploring',
+    word: 'Exploring',
+    num: '03',
     items: [
       'Creative coding & generative art',
       'Open-source contributions',
@@ -35,44 +39,59 @@ const BLOCKS = [
 ];
 
 export default function Currently() {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray('.curr-block').forEach((block, i) => {
+        gsap.fromTo(
+          block,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            delay: i * 0.1,
+            scrollTrigger: {
+              trigger: block,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          }
+        );
+      });
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="currently" className="section currently-section">
+    <section ref={sectionRef} id="currently" className="section-sm currently-section">
       <div className="container">
 
-        {/* Label */}
-        <FadeIn y={20} className="currently-label-row">
-          <span className="label">06 / Currently</span>
-        </FadeIn>
+        <div className="curr-label-row">
+          <span className="t-label" style={{ color: 'var(--dim)' }}>06 / Currently</span>
+        </div>
 
-        {/* Heading */}
-        <FadeIn y={50} delay={0.05} className="currently-heading-wrap">
-          <h2 className="display-lg currently-heading">
-            What I'm<br />
-            <span style={{ color: 'var(--accent)' }}>Up To</span>
-          </h2>
-        </FadeIn>
+        <h2 className="t-display curr-heading">
+          Currently
+        </h2>
 
-        {/* Three-column blocks */}
-        <div className="currently-grid">
-          {BLOCKS.map((block, i) => (
-            <FadeIn key={block.heading} y={40} delay={i * 0.1 + 0.1}>
-              <div className="currently-block">
-                <div className="currently-block-top">
-                  <span className="currently-emoji" aria-hidden="true">
-                    {block.emoji}
-                  </span>
-                  <h3 className="currently-block-title">{block.heading}</h3>
-                </div>
-                <ul className="currently-list" role="list">
-                  {block.items.map((item) => (
-                    <li key={item} className="currently-item">
-                      <span className="currently-dot" aria-hidden="true">→</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+        <div className="curr-grid">
+          {BLOCKS.map((block) => (
+            <div key={block.word} className="curr-block">
+              <div className="curr-block-top">
+                <span className="t-label curr-num">{block.num}</span>
+                <h3 className="curr-word">{block.word}</h3>
               </div>
-            </FadeIn>
+              <ul className="curr-list">
+                {block.items.map((item) => (
+                  <li key={item} className="curr-item">
+                    <span className="curr-arrow" aria-hidden="true">→</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
 

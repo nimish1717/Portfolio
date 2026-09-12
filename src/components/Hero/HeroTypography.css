@@ -1,0 +1,24 @@
+.hero-typography-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden; /* Prevent text from spilling out of frame */
+}
+
+.hero-huge-text {
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 24vw, 24rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--bone);
+  opacity: 0.9;
+  white-space: nowrap;
+  user-select: none;
+  text-align: center;
+  will-change: transform;
+}

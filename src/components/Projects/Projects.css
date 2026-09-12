@@ -1,166 +1,251 @@
 .projects-section {
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  background: var(--ink);
+  border-top: 1px solid var(--line);
 }
 
-.projects-label-row {
-  margin-bottom: 32px;
+.projects-header {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 56px;
 }
 
-.projects-heading-wrap {
-  margin-bottom: 80px;
-}
+.projects-label-row { }
 
 .projects-heading {
-  color: var(--fg);
+  color: var(--bone);
 }
 
-/* Sticky slots — each card gets a top offset for the stack effect */
-.projects-cards-wrap {
+/* ── Expanded Cards Rail ── */
+.exp-cards-rail {
   display: flex;
-  flex-direction: column;
-  /* Total height = (n cards × 85vh) + some breathing room */
-  /* Sticky cards stack; extra height allows scroll progression */
-}
-
-.project-sticky-slot {
-  position: sticky;
-  height: 75vh;
-  display: flex;
-  align-items: stretch;
-  margin-bottom: 16px;
-}
-
-/* Card itself */
-.pcard {
-  position: relative;
-  width: 100%;
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border);
-  padding: 36px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  height: 68vh;
+  min-height: 500px;
+  gap: 3px;
+  border-radius: var(--r-xl);
   overflow: hidden;
-  transition: border-color 0.4s;
-  will-change: transform;
 }
 
-.pcard:hover {
-  border-color: var(--border-hover);
+/* Each sliver */
+.exp-card-sliver {
+  flex: 0 0 72px;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  border-radius: var(--r-lg);
+  transition:
+    flex 0.65s cubic-bezier(0.16,1,0.3,1),
+    border-radius 0.65s;
+  outline: none;
 }
 
-/* Glow top strip */
-.pcard-glow {
+.exp-card-sliver:focus-visible {
+  box-shadow: 0 0 0 2px var(--tide);
+}
+
+.exp-card-sliver.active {
+  flex: 1 1 0;
+  border-radius: var(--r-xl);
+}
+
+/* Card background */
+.exp-card-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 0.4s;
+}
+
+/* Subtle dot grid on card */
+.exp-card-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.04;
+  background-image: radial-gradient(circle, rgba(237,234,228,0.8) 1px, transparent 1px);
+  background-size: 24px 24px;
   pointer-events: none;
 }
 
-/* Top row */
-.pcard-top {
+/* Number badge */
+.exp-card-num {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: var(--dim);
+  transition: all 0.4s;
+}
+
+.exp-card-sliver.active .exp-card-num {
+  left: 28px;
+  transform: none;
+  color: var(--mist);
+  top: 24px;
+}
+
+/* Vertical title when collapsed */
+.exp-card-vertical-name {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  white-space: nowrap;
+  z-index: 3;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mist);
+  opacity: 1;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.exp-card-sliver.active .exp-card-vertical-name {
+  opacity: 0;
+}
+
+/* Expanded content */
+.exp-card-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 4;
+  padding: 32px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: linear-gradient(to top, rgba(6,6,8,0.96) 0%, rgba(6,6,8,0.7) 60%, transparent 100%);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s 0.1s, transform 0.45s 0.1s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+}
+
+.exp-card-sliver.active .exp-card-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.exp-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.pcard-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Title */
-.pcard-title {
+.exp-card-name {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-size: clamp(1.8rem, 3vw, 3rem);
   font-weight: 800;
-  line-height: 0.9;
   letter-spacing: -0.03em;
-  color: var(--fg);
-  transition: color 0.3s;
+  line-height: 1;
+  color: var(--bone);
 }
 
-.pcard:hover .pcard-title {
-  color: var(--card-accent, var(--accent));
+.exp-card-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  font-weight: 500;
+  color: var(--card-accent, var(--tide));
+  letter-spacing: -0.01em;
 }
 
-.pcard-divider {
-  margin: 4px 0;
+.exp-card-desc {
+  font-size: 0.88rem !important;
+  max-width: 520px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Bottom */
-.pcard-bottom {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 40px;
-  align-items: end;
-  flex: 1;
-}
-
-.pcard-desc {
-  font-family: var(--font-body);
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
-  line-height: 1.7;
-  color: var(--fg-muted);
-  max-width: 480px;
-}
-
-.pcard-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
-}
-
-.pcard-tags {
+.exp-card-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
+  gap: 6px;
 }
 
-.pcard-tag {
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+.exp-card-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--fg-muted);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 5px 12px;
-  white-space: nowrap;
+  color: var(--mist);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
 }
 
-.pcard-btn {
+.exp-card-btn {
+  align-self: flex-start;
   font-size: 0.78rem !important;
-  padding: 10px 20px !important;
+  padding: 10px 18px !important;
 }
 
+/* ── Dots nav (mobile) ── */
+.projects-dots {
+  display: none;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.projects-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+}
+
+.projects-dot.active {
+  background: var(--bone);
+  transform: scale(1.3);
+}
+
+/* ── Mobile ── */
 @media (max-width: 768px) {
-  .pcard {
-    padding: 24px 20px;
-  }
-
-  .pcard-bottom {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .pcard-right {
-    align-items: flex-start;
-  }
-
-  .pcard-tags {
-    justify-content: flex-start;
-  }
-
-  .project-sticky-slot {
+  .exp-cards-rail {
+    flex-direction: column;
     height: auto;
-    min-height: 60vh;
+    gap: 4px;
   }
+
+  .exp-card-sliver {
+    flex: 0 0 68px;
+    min-height: 68px;
+    border-radius: var(--r-lg);
+  }
+
+  .exp-card-sliver.active {
+    flex: 0 0 320px;
+    min-height: 320px;
+  }
+
+  .exp-card-vertical-name {
+    bottom: 50%;
+    transform: translateY(50%) translateX(-50%) rotate(0deg);
+    left: 72px;
+    font-size: 0.9rem;
+  }
+
+  .exp-card-num {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .exp-card-sliver.active .exp-card-num {
+    top: 20px;
+    transform: none;
+    left: 20px;
+  }
+
+  .projects-dots { display: flex; }
+
+  .exp-card-content { padding: 20px 20px 24px; }
 }

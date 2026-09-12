@@ -1,34 +1,61 @@
 .skills-section {
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  overflow: hidden;
+  background: var(--ink);
+  border-top: 1px solid var(--line);
 }
 
-.skills-label-row  { margin-bottom: 32px; }
-.skills-heading-wrap { margin-bottom: 64px; }
-.skills-heading    { color: var(--fg); }
+.skills-label-row { margin-bottom: 32px; }
 
-/* Full-bleed marquee area */
-.skills-marquee-section {
+.skills-heading {
+  color: var(--bone);
+  margin-bottom: 64px;
+}
+
+/* Spatial wrap container */
+.skills-container {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 80px;
-  /* Negative margin to break out of container */
-  padding-left: 0;
-  padding-right: 0;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: baseline;
+  margin-bottom: 24px;
+  min-height: 200px;
 }
 
-.skills-row-wrap {
-  width: 100%;
+.skill-item {
+  display: inline-block;
+  font-family: var(--font-display);
+  color: var(--mist);
+  cursor: default;
+  line-height: 1.15;
+  transition: color 0.3s, opacity 0.3s;
+  will-change: transform;
 }
 
-/* Stats row */
+/* When any is hovered: dim all */
+.skills-container.has-hover .skill-item {
+  opacity: 0.15;
+  color: var(--mist);
+}
+
+/* Active skill */
+.skills-container.has-hover .skill-item.hovered {
+  opacity: 1;
+  color: var(--bone);
+}
+
+/* Floating category label */
+.skills-category-label {
+  margin-bottom: 64px;
+  min-height: 1.2em;
+  color: var(--tide) !important;
+  transition: opacity 0.2s;
+}
+
+/* Stats */
 .skills-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
   padding-top: 48px;
 }
 
@@ -44,11 +71,10 @@
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: var(--fg);
+  color: var(--bone);
 }
 
 @media (max-width: 640px) {
-  .skills-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .skills-stats { grid-template-columns: repeat(2,1fr); }
+  .skills-container { gap: 10px 16px; }
 }
