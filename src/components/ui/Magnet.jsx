@@ -1,55 +1,47 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
-export default function Magnet({
-  children,
-  padding = 150,
-  strength = 3,
-  activeTransition = "transform 0.3s ease-out",
-  inactiveTransition = "transform 0.6s ease-in-out",
-  className = ""
-}) {
-  const magnetRef = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
+/**
+ * Magnetic hover effect — child element follows cursor on hover.
+ * Usage: <Magnet strength={25}><button>...</button></Magnet>
+ */
+export default function Magnet({ children, strength = 25, className = '' }) {
+  const wrapRef = useRef(null);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!magnetRef.current) return;
-      
-      const { left, top, width, height } = magnetRef.current.getBoundingClientRect();
-      const centerX = left + width / 2;
-      const centerY = top + height / 2;
+    const el = wrapRef.current;
+    if (!el) return;
 
-      const distX = e.clientX - centerX;
-      const distY = e.clientY - centerY;
-      const distance = Math.sqrt(distX * distX + distY * distY);
-
-      if (distance < padding) {
-        setIsHovering(true);
-        setPosition({
-          x: distX / strength,
-          y: distY / strength
-        });
-      } else {
-        setIsHovering(false);
-        setPosition({ x: 0, y: 0 });
-      }
+    const onMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = ((e.clientX - cx) / rect.width) * strength;
+      const dy = ((e.clientY - cy) / rect.height) * strength;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [padding, strength]);
+    const onLeave = () => {
+      el.style.transform = '';
+      el.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    };
+
+    const onEnter = () => {
+      el.style.transition = 'transform 0.15s ease';
+    };
+
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
+
+    return () => {
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseenter', onEnter);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, [strength]);
 
   return (
-    <div
-      ref={magnetRef}
-      className={`inline-block ${className}`}
-      style={{
-        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-        transition: isHovering ? activeTransition : inactiveTransition,
-        willChange: 'transform'
-      }}
-    >
+    <div ref={wrapRef} className={className} style={{ display: 'inline-block' }}>
       {children}
     </div>
   );

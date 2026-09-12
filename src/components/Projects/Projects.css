@@ -1,0 +1,166 @@
+.projects-section {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.projects-label-row {
+  margin-bottom: 32px;
+}
+
+.projects-heading-wrap {
+  margin-bottom: 80px;
+}
+
+.projects-heading {
+  color: var(--fg);
+}
+
+/* Sticky slots — each card gets a top offset for the stack effect */
+.projects-cards-wrap {
+  display: flex;
+  flex-direction: column;
+  /* Total height = (n cards × 85vh) + some breathing room */
+  /* Sticky cards stack; extra height allows scroll progression */
+}
+
+.project-sticky-slot {
+  position: sticky;
+  height: 75vh;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+/* Card itself */
+.pcard {
+  position: relative;
+  width: 100%;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+  transition: border-color 0.4s;
+  will-change: transform;
+}
+
+.pcard:hover {
+  border-color: var(--border-hover);
+}
+
+/* Glow top strip */
+.pcard-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  pointer-events: none;
+}
+
+/* Top row */
+.pcard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pcard-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Title */
+.pcard-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  transition: color 0.3s;
+}
+
+.pcard:hover .pcard-title {
+  color: var(--card-accent, var(--accent));
+}
+
+.pcard-divider {
+  margin: 4px 0;
+}
+
+/* Bottom */
+.pcard-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: end;
+  flex: 1;
+}
+
+.pcard-desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  line-height: 1.7;
+  color: var(--fg-muted);
+  max-width: 480px;
+}
+
+.pcard-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.pcard-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.pcard-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.pcard-btn {
+  font-size: 0.78rem !important;
+  padding: 10px 20px !important;
+}
+
+@media (max-width: 768px) {
+  .pcard {
+    padding: 24px 20px;
+  }
+
+  .pcard-bottom {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .pcard-right {
+    align-items: flex-start;
+  }
+
+  .pcard-tags {
+    justify-content: flex-start;
+  }
+
+  .project-sticky-slot {
+    height: auto;
+    min-height: 60vh;
+  }
+}

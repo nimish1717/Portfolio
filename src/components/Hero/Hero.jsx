@@ -1,61 +1,146 @@
-import { useRef, useEffect } from 'react';
-import { useScroll, motion, useTransform } from 'framer-motion';
-import HeroCharacter from './HeroCharacter';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import ShaderBackground from './ShaderBackground';
+import Magnet from '../ui/Magnet';
 import './Hero.css';
+
+const scrollTo = (id) => (e) => {
+  e.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+};
+
+// Staggered character animation variants
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+
+const charVariants = {
+  hidden: { y: '110%', opacity: 0 },
+  show: {
+    y: '0%',
+    opacity: 1,
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+function AnimatedWord({ word, delay = 0 }) {
+  return (
+    <motion.span
+      className="hero-word"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      transition={{ delayChildren: delay }}
+      aria-hidden="true"
+    >
+      {word.split('').map((char, i) => (
+        <motion.span key={i} variants={charVariants} className="hero-char">
+          {char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+}
 
 export default function Hero() {
   const containerRef = useRef(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end start'] // Tracks while container is leaving
+    offset: ['start start', 'end start'],
   });
 
-  // Since React Three Fiber needs a ref to avoid re-renders,
-  // we use a plain ref updated via motionValue.onChange
-  const scrollData = useRef(0);
-  
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
-      // The hero is 200vh tall, so it scrolls for 100vh.
-      // We want progress from 0 to 1 over that scroll.
-      scrollData.current = Math.min(1, Math.max(0, latest * 2));
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
-
-  // Typography animations linked to scroll
-  const titleY = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Typography drifts up and fades as you scroll
+  const titleY       = useTransform(scrollYProgress, [0, 0.6], ['0%', '-35%']);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const subtitleY    = useTransform(scrollYProgress, [0, 0.5], ['0%', '-25%']);
 
   return (
-    <section ref={containerRef} className="relative h-[200vh] w-full bg-[#0a0a0c]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
-        
-        {/* 3D Character Layer */}
-        <HeroCharacter scrollData={scrollData} />
+    <section
+      ref={containerRef}
+      id="hero"
+      className="hero-section"
+      aria-label="Hero — Nimish Agrawal"
+    >
+      {/* Sticky viewport */}
+      <div className="hero-sticky">
+        {/* WebGL Shader Background */}
+        <ShaderBackground />
 
-        {/* Typography Layer (matching existing design) */}
-        <motion.div 
-          className="hero-content relative z-20 pointer-events-none"
+        {/* Gradient overlay — darkens bottom for text legibility */}
+        <div className="hero-overlay" aria-hidden="true" />
+
+        {/* Main typography */}
+        <motion.div
+          className="hero-content"
           style={{ y: titleY, opacity: titleOpacity }}
         >
-          <h1 className="hero-name title mix-blend-difference">
-            Nimish Agrawal
+          <h1 className="hero-name" aria-label="Nimish Agrawal">
+            <span className="clip-line">
+              <AnimatedWord word="NIMISH" delay={0.05} />
+            </span>
+            <span className="clip-line hero-name-second">
+              <AnimatedWord word="AGRAWAL" delay={0.25} />
+            </span>
           </h1>
-          <p className="hero-subtitle para mix-blend-difference">
-            Software Engineer · Full-Stack Developer · Problem Solver
-          </p>
         </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="scroll-indicator z-20 pointer-events-none"
+        {/* Bottom bar */}
+        <motion.div
+          className="hero-bottom"
+          style={{ y: subtitleY, opacity: titleOpacity }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="hero-bottom-left">
+            <p className="hero-subtitle">
+              Software Engineer<br />
+              <span style={{ color: 'var(--fg-muted)' }}>Creative Developer</span>
+            </p>
+            <p className="hero-tagline">I build things that move.</p>
+          </div>
+
+          <div className="hero-bottom-right">
+            <Magnet strength={18}>
+              <a href="#projects" className="btn-solid hero-btn" onClick={scrollTo('projects')} id="hero-view-work">
+                View Work ↓
+              </a>
+            </Magnet>
+            <Magnet strength={18}>
+              <a href="#contact" className="btn-outline hero-btn" onClick={scrollTo('contact')} id="hero-contact">
+                Let's Connect
+              </a>
+            </Magnet>
+          </div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="hero-scroll-indicator"
           style={{ opacity: titleOpacity }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.7 }}
+          aria-hidden="true"
         >
           <div className="scroll-line" />
+          <span className="label" style={{ marginTop: 8 }}>scroll</span>
         </motion.div>
-        
+
+        {/* Section number */}
+        <motion.span
+          className="hero-section-num label"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          aria-hidden="true"
+        >
+          01 / 07
+        </motion.span>
       </div>
     </section>
   );

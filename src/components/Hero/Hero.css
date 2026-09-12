@@ -1,70 +1,162 @@
+/* ── Hero Section ─────────────────────────────── */
+.hero-section {
+  position: relative;
+  height: 220vh;          /* tall enough to scroll through */
+  width: 100%;
+}
+
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle gradient overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(7,7,8,0.25) 0%,
+    rgba(7,7,8,0.0)  40%,
+    rgba(7,7,8,0.6)  85%,
+    rgba(7,7,8,1.0)  100%
+  );
+  pointer-events: none;
+}
+
+/* Main name block */
 .hero-content {
+  position: relative;
+  z-index: 2;
   text-align: center;
-  padding: 0 20px;
+  pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .hero-name {
-  font-size: clamp(40px, 8vw, 120px);
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 16vw, 15rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  color: var(--fg);
   text-transform: uppercase;
-  line-height: 1.1;
-  color: #fff;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  user-select: none;
+}
+
+.hero-name-second {
+  /* slight indent for the second line — asymmetric like Scrolltide */
+  padding-left: 4vw;
+}
+
+/* Split char containers */
+.hero-word {
+  display: inline-flex;
+}
+
+.hero-char {
+  display: inline-block;
+}
+
+/* Bottom bar */
+.hero-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 5vw 40px;
+  will-change: transform, opacity;
+}
+
+.hero-bottom-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .hero-subtitle {
-  font-size: clamp(14px, 1.8vw, 22px);
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 20px;
-  overflow: hidden;
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--fg);
 }
 
-.scroll-indicator {
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.01em;
+  margin-top: 4px;
+}
+
+.hero-bottom-right {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+}
+
+.hero-btn {
+  font-size: clamp(0.7rem, 1vw, 0.85rem) !important;
+  padding: 12px 22px !important;
+}
+
+/* Scroll indicator */
+.hero-scroll-indicator {
   position: absolute;
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  pointer-events: none;
 }
 
-.scroll-line {
-  width: 1px;
-  height: 60px;
-  background: linear-gradient(to bottom, var(--accentColor, #ffffff), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
+/* Section number — top-right */
+.hero-section-num {
+  position: absolute;
+  top: 32px;
+  right: 5vw;
+  z-index: 3;
 }
 
-@keyframes scrollPulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scaleY(0.6);
-    transform-origin: top;
-  }
-  50% {
-    opacity: 1;
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-}
-
+/* ── Responsive ───────────────────────────── */
 @media (max-width: 768px) {
+  .hero-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 32px;
+  }
+
+  .hero-bottom-right {
+    flex-direction: row;
+    gap: 10px;
+  }
+
   .hero-name {
-    letter-spacing: 0.02em;
-  }
-
-  .hero-subtitle {
-    letter-spacing: 1px;
-    font-size: 12px;
-  }
-
-  .scroll-indicator {
-    bottom: 20px;
+    font-size: clamp(3.5rem, 18vw, 6rem);
+    line-height: 0.88;
   }
 }
