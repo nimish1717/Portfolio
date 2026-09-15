@@ -1,251 +1,180 @@
-.projects-section {
-  background: var(--ink);
-  border-top: 1px solid var(--line);
-}
-
-.projects-header {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-bottom: 56px;
-}
-
-.projects-label-row { }
-
-.projects-heading {
-  color: var(--bone);
-}
-
-/* ── Expanded Cards Rail ── */
-.exp-cards-rail {
-  display: flex;
-  height: 68vh;
-  min-height: 500px;
-  gap: 3px;
-  border-radius: var(--r-xl);
-  overflow: hidden;
-}
-
-/* Each sliver */
-.exp-card-sliver {
-  flex: 0 0 72px;
+/* ─────────────────────────────────────────
+   GSAP Projects Section
+───────────────────────────────────────── */
+.projects-section-gsap {
   position: relative;
+  background: var(--ink);
   overflow: hidden;
-  cursor: none;
-  border-radius: var(--r-lg);
-  transition:
-    flex 0.65s cubic-bezier(0.16,1,0.3,1),
-    border-radius 0.65s;
-  outline: none;
-}
-
-.exp-card-sliver:focus-visible {
-  box-shadow: 0 0 0 2px var(--tide);
-}
-
-.exp-card-sliver.active {
-  flex: 1 1 0;
-  border-radius: var(--r-xl);
-}
-
-/* Card background */
-.exp-card-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  transition: opacity 0.4s;
-}
-
-/* Subtle dot grid on card */
-.exp-card-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0.04;
-  background-image: radial-gradient(circle, rgba(237,234,228,0.8) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
-}
-
-/* Number badge */
-.exp-card-num {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  color: var(--dim);
-  transition: all 0.4s;
-}
-
-.exp-card-sliver.active .exp-card-num {
-  left: 28px;
-  transform: none;
-  color: var(--mist);
-  top: 24px;
-}
-
-/* Vertical title when collapsed */
-.exp-card-vertical-name {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-90deg);
-  white-space: nowrap;
-  z-index: 3;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--mist);
-  opacity: 1;
-  transition: opacity 0.25s;
-  pointer-events: none;
-}
-
-.exp-card-sliver.active .exp-card-vertical-name {
-  opacity: 0;
-}
-
-/* Expanded content */
-.exp-card-content {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  z-index: 4;
-  padding: 32px 32px 36px;
+  height: 100vh; /* Will be pinned by GSAP */
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background: linear-gradient(to top, rgba(6,6,8,0.96) 0%, rgba(6,6,8,0.7) 60%, transparent 100%);
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.4s 0.1s, transform 0.45s 0.1s cubic-bezier(0.16,1,0.3,1);
-  pointer-events: none;
-}
-
-.exp-card-sliver.active .exp-card-content {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: all;
-}
-
-.exp-card-top {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-.exp-card-name {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: var(--bone);
+.gsap-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 10vh;
 }
 
-.exp-card-tagline {
-  font-family: var(--font-display);
-  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-  font-weight: 500;
-  color: var(--card-accent, var(--tide));
-  letter-spacing: -0.01em;
+.projects-header-gsap {
+  position: absolute;
+  top: 15vh;
+  left: max(5vw, 24px);
+  z-index: 50;
+  pointer-events: none; /* Let clicks pass through to cards if they overlap */
 }
 
-.exp-card-desc {
-  font-size: 0.88rem !important;
-  max-width: 520px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+/* ─────────────────────────────────────────
+   Fan Deck Layout
+───────────────────────────────────────── */
+.fan-deck-container {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 65vh;
+  margin-top: 15vh; /* Push down below header */
+  perspective: 1000px;
+}
+
+.fan-deck-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+/* ─────────────────────────────────────────
+   Project Card Styling
+───────────────────────────────────────── */
+.fan-project-card {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--r-xl);
+  padding: 1px; /* for gradient border effect */
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.01));
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,0,0,0.2) inset;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.fan-card-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--r-xl) - 1px);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
   overflow: hidden;
+  background: var(--ink-2); /* Fallback */
 }
 
-.exp-card-tech {
+/* Grid overlay on cards */
+.fan-card-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fan-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+  margin-bottom: auto;
+}
+
+.fan-card-meta {
+  display: flex;
+  gap: 24px;
+}
+
+.fan-card-num {
+  font-size: 1.2rem;
+  color: var(--mist);
+  opacity: 0.5;
+}
+
+.fan-card-body {
+  position: relative;
+  z-index: 2;
+  margin-top: 40px;
+}
+
+.fan-card-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 24px;
 }
 
-.exp-card-tag {
+.fan-card-tag {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: var(--mist);
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
-  padding: 4px 10px;
+  color: var(--mist);
+  background: rgba(0,0,0,0.2);
 }
 
-.exp-card-btn {
-  align-self: flex-start;
-  font-size: 0.78rem !important;
-  padding: 10px 18px !important;
+.fan-card-footer {
+  position: relative;
+  z-index: 2;
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-start;
 }
 
-/* ── Dots nav (mobile) ── */
-.projects-dots {
-  display: none;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.projects-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--line-strong);
-  border: none;
-  cursor: pointer;
-  transition: background 0.25s, transform 0.25s;
-}
-
-.projects-dot.active {
+.fan-card-btn {
   background: var(--bone);
-  transform: scale(1.3);
+  color: var(--ink);
+  padding: 16px 32px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
 
-/* ── Mobile ── */
+.fan-card-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* ─────────────────────────────────────────
+   Responsive
+───────────────────────────────────────── */
 @media (max-width: 768px) {
-  .exp-cards-rail {
-    flex-direction: column;
-    height: auto;
-    gap: 4px;
+  .fan-deck-container {
+    height: 60vh;
+    margin-top: 25vh;
   }
-
-  .exp-card-sliver {
-    flex: 0 0 68px;
-    min-height: 68px;
-    border-radius: var(--r-lg);
+  
+  .fan-card-inner {
+    padding: 24px;
   }
-
-  .exp-card-sliver.active {
-    flex: 0 0 320px;
-    min-height: 320px;
+  
+  .projects-header-gsap {
+    top: 10vh;
   }
-
-  .exp-card-vertical-name {
-    bottom: 50%;
-    transform: translateY(50%) translateX(-50%) rotate(0deg);
-    left: 72px;
-    font-size: 0.9rem;
+  
+  .fan-card-body h3 {
+    font-size: 2.5rem !important;
   }
-
-  .exp-card-num {
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .exp-card-sliver.active .exp-card-num {
-    top: 20px;
-    transform: none;
-    left: 20px;
-  }
-
-  .projects-dots { display: flex; }
-
-  .exp-card-content { padding: 20px 20px 24px; }
 }

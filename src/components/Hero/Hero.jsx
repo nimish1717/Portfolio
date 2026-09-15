@@ -4,7 +4,6 @@ import ShaderBackground from './ShaderBackground';
 import HeroNavigation from './HeroNavigation';
 import HeroTypography from './HeroTypography';
 import HeroImage from './HeroImage';
-import HeroBlocks from './HeroBlocks';
 import './Hero.css';
 
 export default function Hero() {
@@ -35,17 +34,11 @@ export default function Hero() {
   const bgX = useTransform(smoothMouseX, [-1, 1], [-10, 10]);
   const bgY = useTransform(smoothMouseY, [-1, 1], [-10, 10]);
 
-  const typeX = useTransform(smoothMouseX, [-1, 1], [-30, 30]);
-  const typeY = useTransform(smoothMouseY, [-1, 1], [-15, 15]);
+  const typeX = useTransform(smoothMouseX, [-1, 1], [-15, 15]);
+  const typeY = useTransform(smoothMouseY, [-1, 1], [-5, 5]);
 
-  const imageX = useTransform(smoothMouseX, [-1, 1], [15, -15]); // Opposite to type for depth
+  const imageX = useTransform(smoothMouseX, [-1, 1], [15, -15]); 
   const imageY = useTransform(smoothMouseY, [-1, 1], [5, -5]);
-
-  const uiSmallX = useTransform(smoothMouseX, [-1, 1], [20, -20]);
-  const uiSmallY = useTransform(smoothMouseY, [-1, 1], [10, -10]);
-
-  const uiMedX = useTransform(smoothMouseX, [-1, 1], [40, -40]);
-  const uiMedY = useTransform(smoothMouseY, [-1, 1], [20, -20]);
 
   // ────────────────────────────────────────────────────────
   // 2. Scroll Interaction Setup
@@ -62,7 +55,7 @@ export default function Hero() {
   const borderRadius = useTransform(scrollYProgress, [0, 0.2], ['24px', '40px']);
 
   // Typography moves faster on scroll
-  const typeScrollY = useTransform(scrollYProgress, [0, 1], ['0vh', '-20vh']);
+  const typeScrollY = useTransform(scrollYProgress, [0, 1], ['0vh', '-15vh']);
   
   // Image moves slightly
   const imageScrollY = useTransform(scrollYProgress, [0, 1], ['0vh', '-5vh']);
@@ -92,14 +85,14 @@ export default function Hero() {
             <div className="hero-noise-overlay" />
           </motion.div>
 
-          {/* LAYER 2: Large Typography (Behind Subject) */}
+          {/* LAYER 2: Left Content (Typography & Buttons) */}
           <HeroTypography 
             scrollY={typeScrollY} 
             mouseX={typeX} 
             mouseY={typeY} 
           />
 
-          {/* LAYER 3: Central Subject Image */}
+          {/* LAYER 3: Right Content (Subject Image with Flashlight Mask) */}
           <HeroImage 
             scrollY={imageScrollY} 
             mouseX={imageX} 
@@ -108,14 +101,6 @@ export default function Hero() {
 
           {/* LAYER 4: Navigation */}
           <HeroNavigation />
-
-          {/* LAYER 5: Editorial Blocks & CTA Cards */}
-          <HeroBlocks 
-            parallaxSmallX={uiSmallX} 
-            parallaxSmallY={uiSmallY} 
-            parallaxMedX={uiMedX} 
-            parallaxMedY={uiMedY} 
-          />
 
         </motion.div>
       </div>

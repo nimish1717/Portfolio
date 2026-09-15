@@ -1,116 +1,73 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PROJECTS } from '../../data/projects.js';
-import Magnet from '../ui/Magnet';
+import ProjectCardGSAP from './ProjectCardGSAP';
 import './Projects.css';
 
-const EASE = [0.16, 1, 0.3, 1];
-
-/**
- * Expanded Cards — rail of tall slivers.
- * Hovering one widens it into a full card.
- * Neighbours compress.
- * Active card reveals full content.
- * Text is laid out at the open width so it never rewraps.
- */
-function ProjectCard({ project, isActive, onActivate, isMobile }) {
-  const cardRef = useRef(null);
-
-  const handleInteract = () => onActivate(project.id);
-
-  return (
-    <div
-      ref={cardRef}
-      className={`exp-card-sliver${isActive ? ' active' : ''}`}
-      style={{ '--card-color': project.color, '--card-accent': project.accent }}
-      onClick={handleInteract}
-      onMouseEnter={!isMobile ? handleInteract : undefined}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && handleInteract()}
-      aria-expanded={isActive}
-      aria-label={`Project: ${project.name}`}
-      data-cursor="project"
-    >
-      {/* Background */}
-      <div
-        className="exp-card-bg"
-        style={{
-          background: `radial-gradient(ellipse 80% 80% at 30% 70%, ${project.accent}20 0%, ${project.color} 65%)`,
-        }}
-      />
-
-      {/* Subtle grid lines on card */}
-      <div className="exp-card-grid" aria-hidden="true" />
-
-      {/* Number — vertical when collapsed, horizontal when open */}
-      <div className="exp-card-num t-label">
-        {project.num}
-      </div>
-
-      {/* Collapsed: vertical title */}
-      <div className="exp-card-vertical-name" aria-hidden={isActive}>
-        <span>{project.name}</span>
-      </div>
-
-      {/* Expanded content */}
-      <div className="exp-card-content">
-        {/* Top row */}
-        <div className="exp-card-top">
-          <span className="t-label" style={{ color: project.accent }}>
-            {project.category}
-          </span>
-          <span className="t-label">{project.year}</span>
-        </div>
-
-        {/* Project name */}
-        <h3 className="exp-card-name">{project.name}</h3>
-
-        {/* Tagline */}
-        <p className="exp-card-tagline">{project.tagline}</p>
-
-        {/* Description */}
-        <p className="exp-card-desc t-body">{project.description}</p>
-
-        {/* Tech */}
-        <div className="exp-card-tech">
-          {project.tech.map((t) => (
-            <span key={t} className="exp-card-tag">{t}</span>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <Magnet strength={12}>
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost exp-card-btn"
-            id={`project-link-${project.id}`}
-            data-cursor="link"
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`View ${project.name} live`}
-          >
-            View Project <span className="btn-arrow-icon">↗</span>
-          </a>
-        </Magnet>
-      </div>
-    </div>
-  );
-}
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
-  const [activeId, setActiveId] = useState(PROJECTS[0].id);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const containerRef = useRef(null);
+  const cardsRef = useRef([]);
 
-  const handleActivate = (id) => setActiveId(id);
+  useEffect(() => {
+    let ctx = gsap.context(() => {
+      const cards = cardsRef.current;
+      if (!cards.length) return;
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: `+=${cards.length * 150}%`, // scroll length based on number of cards (longer duration)
+          scrub: true,
+          pin: true,
+        }
+      });
+
+      // Prepare initial states
+      gsap.set(cards, { y: '0%', scale: 1, opacity: 1 });
+      cards.forEach((card, i) => {
+        if (i !== 0) {
+          gsap.set(card, { y: '150vh' }); // Push all but first down
+        }
+      });
+
+      // Animate the stack
+      cards.forEach((card, i) => {
+        if (i === 0) return;
+
+        // When card `i` comes up, it scales down all previous cards
+        const previousCards = cards.slice(0, i);
+        
+        tl.to(previousCards, {
+          scale: (index) => 1 - (i - index) * 0.04,
+          y: (index) => -(i - index) * 20,
+          opacity: (index) => 1 - (i - index) * 0.1,
+          ease: 'none',
+        }, 'start' + i); // Sync this with the card coming up
+
+        tl.to(card, {
+          y: '0vh',
+          ease: 'none',
+        }, 'start' + i);
+      });
+      
+    }, containerRef);
+    
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="projects" className="section projects-section">
-      <div className="container">
-
+    <section 
+      id="projects" 
+      className="section projects-section-gsap" 
+      ref={containerRef}
+    >
+      <div className="container gsap-container">
         {/* Header */}
-        <div className="projects-header">
+        <div className="projects-header-gsap">
           <div className="projects-label-row">
             <span className="t-label" style={{ color: 'var(--dim)' }}>03 / Selected Work</span>
           </div>
@@ -120,31 +77,19 @@ export default function Projects() {
           </h2>
         </div>
 
-        {/* Expanded Cards rail */}
-        <div className="exp-cards-rail" role="list">
-          {PROJECTS.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              isActive={activeId === project.id}
-              onActivate={handleActivate}
-              isMobile={isMobile}
-            />
+        {/* GSAP Stacking Cards Container */}
+        <div className="fan-deck-container">
+          {PROJECTS.map((project, i) => (
+            <div 
+              key={project.id} 
+              ref={(el) => (cardsRef.current[i] = el)}
+              className="fan-deck-wrapper"
+              style={{ zIndex: i }} // Just use normal index, later ones stack on top naturally
+            >
+              <ProjectCardGSAP project={project} index={i} />
+            </div>
           ))}
         </div>
-
-        {/* Mobile: project index dots */}
-        <div className="projects-dots" aria-hidden="true">
-          {PROJECTS.map((p) => (
-            <button
-              key={p.id}
-              className={`projects-dot${activeId === p.id ? ' active' : ''}`}
-              onClick={() => setActiveId(p.id)}
-              aria-label={`Select project ${p.name}`}
-            />
-          ))}
-        </div>
-
       </div>
     </section>
   );

@@ -3,7 +3,7 @@
   inset: 0;
   display: flex;
   align-items: flex-end; /* Align to bottom of frame */
-  justify-content: center;
+  justify-content: flex-end; /* Align to right side */
   z-index: 20;
   pointer-events: none;
   overflow: hidden;
@@ -11,21 +11,32 @@
 
 .hero-image-wrapper {
   position: relative;
-  width: 100%;
-  height: 90%;
+  width: 55%; /* Take up right half of screen */
+  height: 95%;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   will-change: transform;
+  margin-right: max(2vw, 20px);
 }
 
 .hero-image {
   max-height: 100%;
-  max-width: 90vw;
+  max-width: 100%;
   object-fit: contain;
-  object-position: bottom center;
-  /* Cinematic treatment */
-  filter: contrast(1.05) saturate(0.95) drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+  object-position: bottom right;
+}
+
+.cinematic-subject-base {
+  /* Permanently visible, but slightly dimmed and desaturated to let the spotlight pop */
+  filter: contrast(0.9) brightness(0.6) saturate(0.5) drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+  transition: filter 0.5s ease;
+}
+
+.cinematic-subject {
+  /* The spotlight layer: full brightness */
+  filter: contrast(1.1) brightness(1.1) saturate(1.1);
+  pointer-events: none;
 }
 
 .hero-image-fallback {

@@ -4,9 +4,9 @@ import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import CustomCursor from './components/Cursor/CustomCursor';
 import MeshFlow from './components/Background/MeshFlow';
 import Navbar from './components/Navigation/Navbar';
-import Hero from './components/Hero/Hero';
+import HeroSection from './components/Hero/HeroSection';
 import About from './components/About/About';
-import Projects from './components/Projects/Projects';
+import ProjectsSection from './components/Projects/ProjectsSection';
 import Experience from './components/Experience/Experience';
 import Skills from './components/Skills/Skills';
 import Currently from './components/Currently/Currently';
@@ -42,9 +42,9 @@ function App() {
           <Navbar />
 
           <main style={{ position: 'relative', zIndex: 1 }}>
-            <Hero />
+            <HeroSection />
             <About />
-            <Projects />
+            <ProjectsSection />
             <Experience />
             <Skills />
             <Currently />
