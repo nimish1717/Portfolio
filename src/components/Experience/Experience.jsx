@@ -47,6 +47,18 @@ export default function Experience() {
             },
           }
         );
+
+        // Mute item as it goes past center
+        gsap.to(el, {
+          opacity: 0.4,
+          filter: 'blur(2px)',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 35%',
+            end: 'top 15%',
+            scrub: true,
+          }
+        });
       });
     }, sectionRef);
 

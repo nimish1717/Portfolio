@@ -69,7 +69,7 @@ export default function Currently() {
       <div className="container">
 
         <div className="curr-label-row">
-          <span className="t-label" style={{ color: 'var(--dim)' }}>06 / Currently</span>
+          <span className="t-label" style={{ color: 'var(--dim)' }}>06 / Exploring</span>
         </div>
 
         <h2 className="t-display curr-heading">

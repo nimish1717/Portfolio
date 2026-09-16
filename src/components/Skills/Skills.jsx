@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { SKILLS, SKILL_SIZE_MAP } from '../../data/skills.js';
+import { PROJECTS } from '../../data/projects.js';
 import './Skills.css';
 
 /**
@@ -49,8 +50,8 @@ export default function Skills() {
   const hasHover = hovered !== null;
 
   return (
-    <section id="skills" className="section skills-section">
-      <div className="container">
+    <section id="skills" className="section skills-section relative z-10">
+      <div className="container relative">
 
         {/* Label */}
         <div className="skills-label-row">
@@ -72,6 +73,7 @@ export default function Skills() {
         >
           {SKILLS.map((skill, i) => {
             const sty = SKILL_SIZE_MAP[skill.size];
+            // Primary skills have larger size, we can enforce some hierarchy visually
             return (
               <span
                 key={skill.name}
@@ -80,6 +82,7 @@ export default function Skills() {
                 style={{
                   fontSize:   sty.fontSize,
                   fontWeight: sty.fontWeight,
+                  color: ['C++', 'React', 'Next.js', 'Node.js', 'PostgreSQL', 'JavaScript'].includes(skill.name) ? 'var(--bone)' : 'var(--mist)',
                   transition: `transform 0.4s cubic-bezier(0.16,1,0.3,1), color 0.3s, opacity 0.3s`,
                 }}
                 onMouseEnter={() => setHovered(i)}
@@ -105,7 +108,7 @@ export default function Skills() {
         <div className="skills-stats">
           {[
             { val: '2+',  label: 'Years coding'       },
-            { val: '5+',  label: 'Projects shipped'   },
+            { val: `${PROJECTS.length}`,  label: 'Projects shipped'   },
             { val: '17+', label: 'Technologies'       },
             { val: '2',   label: 'Industry selections'},
           ].map((s) => (

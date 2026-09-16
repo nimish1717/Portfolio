@@ -95,7 +95,7 @@ export const ProjectsSection = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
                   
                   {/* Left Column (7 Cols) */}
-                  <div className="lg:col-span-7 flex flex-col justify-between">
+                  <div className="lg:col-span-7 flex flex-col justify-between transform transition-transform duration-500 group-hover:-translate-y-1">
                     <div>
                       <div className="flex items-center space-x-3 mb-4">
                         <span className="text-xs font-mono font-bold text-[#46B7FF]">
@@ -114,7 +114,7 @@ export const ProjectsSection = () => {
                       </h3>
 
                       <p
-                        className="text-xs sm:text-sm md:text-[14px] font-light text-gray-300 leading-[1.85] tracking-wide mb-8 max-w-2xl"
+                        className="text-xs sm:text-sm md:text-[14px] font-light text-gray-300 leading-[1.85] tracking-wide mb-8 max-w-2xl transition-colors duration-500 group-hover:text-gray-200"
                         style={{ fontFamily: "'Montserrat', sans-serif" }}
                       >
                         {project.description}

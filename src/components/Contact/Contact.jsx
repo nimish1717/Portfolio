@@ -21,7 +21,14 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       const chars = ctaRef.current?.querySelectorAll('.cta-ch');
       if (chars?.length) {
-        gsap.fromTo(
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 72%',
+          }
+        });
+
+        tl.fromTo(
           chars,
           { y: '110%', opacity: 0 },
           {
@@ -30,11 +37,21 @@ export default function Contact() {
             stagger: 0.022,
             duration: 0.6,
             ease: 'power3.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 72%',
-            },
           }
+        );
+
+        // Buttons enter afterward
+        tl.fromTo(
+          '.contact-btn',
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: 'back.out(1.5)',
+          },
+          "-=0.2"
         );
       }
     }, sectionRef);

@@ -187,10 +187,12 @@ button { cursor: none; background: none; border: none; font: inherit; color: inh
 .section {
   padding: 130px max(5vw, 24px);
   position: relative;
+  scroll-margin-top: 80px;
 }
 
 .section-sm {
   padding: 80px max(5vw, 24px);
+  scroll-margin-top: 80px;
 }
 
 .container {
@@ -308,7 +310,7 @@ body::after {
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 100;
+  z-index: 900;
   display: flex;
   align-items: center;
   justify-content: space-between;

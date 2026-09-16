@@ -1,11 +1,10 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './About.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The full paragraph split into words for the Focus Reveal effect
 const PARA_WORDS = [
   'Computer', 'Engineering', 'student', 'at', 'Thapar', 'Institute',
   'of', 'Engineering', '&', 'Technology,', 'building', 'software,',
@@ -22,30 +21,29 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // ── Heading: clip-path reveal ──
+      // ── Heading: Line stagger reveal ──
       gsap.fromTo(
-        headingRef.current,
-        { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
+        headingRef.current.children,
+        { opacity: 0, y: 30, filter: 'blur(8px)' },
         {
-          clipPath: 'inset(0 0% 0 0)',
-          opacity: 1,
-          duration: 1.1,
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 1,
+          stagger: 0.15,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 70%',
+            start: 'top 75%',
           },
         }
       );
 
       // ── Focus Reveal: words unblur progressively on scroll ──
-      // Each word's scrub window is offset — creates the travelling focus frame
       const words = wordRefs.current.filter(Boolean);
       const total = words.length;
 
       words.forEach((word, i) => {
         const startFrac = i / total;
-        const endFrac   = (i + 2) / total;   // 2-word window always fully sharp
+        const endFrac   = (i + 2) / total;
 
         gsap.fromTo(
           word,
@@ -84,8 +82,8 @@ export default function About() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" className="section about-section">
-      <div className="container">
+    <section ref={sectionRef} id="about" className="section about-section relative">
+      <div className="container relative z-10">
 
         {/* Section label */}
         <div className="about-label-row">
@@ -93,71 +91,79 @@ export default function About() {
           <div className="about-line" />
         </div>
 
-        {/* Large heading — clip reveal */}
-        <div ref={headingRef} className="about-heading-wrap" style={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}>
-          <h2 className="t-display about-heading">
-            Crafting<br />
-            <em>digital&nbsp;worlds.</em>
+        {/* Large heading — line reveal */}
+        <div ref={headingRef} className="about-heading-wrap mb-16">
+          <h2 className="t-display about-heading leading-[1.1]">
+            <span className="block overflow-hidden"><span className="block">Creative</span></span>
+            <span className="block overflow-hidden"><span className="block italic text-[#46B7FF]">digital builder.</span></span>
           </h2>
         </div>
 
         {/* Two-column layout */}
-        <div className="about-body">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-12 md:gap-20">
+          
           {/* Left: Focus Reveal paragraph */}
-          <div className="about-para-col">
-            <p className="about-para" aria-label="About Nimish Agrawal">
+          <div className="w-full md:w-[55%]">
+            <p className="about-para text-xl md:text-2xl font-light leading-relaxed" aria-label="About Nimish Agrawal">
               {PARA_WORDS.map((word, i) => (
                 <span
                   key={i}
                   ref={(el) => (wordRefs.current[i] = el)}
-                  className="focus-word"
+                  className="focus-word inline-block mr-2 mb-1"
                   style={{
                     filter: 'blur(var(--blur, 8px))',
                     opacity: 'var(--op, 0.15)',
                   }}
                   aria-hidden="true"
                 >
-                  {word}&nbsp;
+                  {word}
                 </span>
               ))}
             </p>
-
-            {/* Screen-reader version */}
             <p className="sr-only">
               {PARA_WORDS.join(' ')}
             </p>
           </div>
 
-          {/* Right: Info blocks */}
-          <div className="about-info-col">
-            {[
-              {
-                label: 'Education',
-                content: 'B.E. Computer Engineering\nThapar Institute · 2023–2027',
-              },
-              {
-                label: 'Focus',
-                content: 'Frontend Engineering\nFull-Stack Development\nAI / Machine Learning',
-              },
-              {
-                label: 'Currently',
-                content: 'Open to internships &\nfull-time opportunities.',
-              },
-            ].map((block) => (
-              <div key={block.label} className="about-info-block">
-                <span className="t-label about-info-label">{block.label}</span>
-                <p className="about-info-text">
-                  {block.content.split('\n').map((line, i) => (
-                    <span key={i}>{line}<br /></span>
-                  ))}
-                </p>
-              </div>
-            ))}
+          {/* Right: Target container for Hero Video + Info blocks */}
+          <div className="w-full md:w-[40%] flex flex-col">
+            {/* Visual Target for Cinematic Video Transition */}
+            <div 
+              id="about-visual-target" 
+              className="w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-xl mb-10 opacity-0 pointer-events-none"
+            ></div>
+
+            {/* Info blocks below the visual on desktop, below on mobile */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-10">
+              {[
+                {
+                  label: 'Education',
+                  content: 'B.E. Computer Engineering\nThapar Institute · 2023–2027',
+                },
+                {
+                  label: 'Focus',
+                  content: 'Frontend Engineering\nFull-Stack Development\nAI / Machine Learning',
+                },
+                {
+                  label: 'Currently',
+                  content: 'Open to internships &\nfull-time opportunities.',
+                },
+              ].map((block) => (
+                <div key={block.label} className="about-info-block">
+                  <span className="t-label block mb-3 text-[#46B7FF]/70">{block.label}</span>
+                  <p className="text-sm font-medium text-gray-300 leading-relaxed">
+                    {block.content.split('\n').map((line, i) => (
+                      <span key={i}>{line}<br /></span>
+                    ))}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Statement */}
-        <p ref={statRef} className="about-statement">
+        <p ref={statRef} className="about-statement mt-24 text-center text-lg md:text-xl font-medium tracking-wide text-white">
           {STATEMENT}
         </p>
 

@@ -12,6 +12,7 @@ import Skills from './components/Skills/Skills';
 import Currently from './components/Currently/Currently';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
+import CinematicVideo from './components/Background/CinematicVideo';
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -42,6 +43,7 @@ function App() {
           <Navbar />
 
           <main style={{ position: 'relative', zIndex: 1 }}>
+            <CinematicVideo />
             <HeroSection />
             <About />
             <ProjectsSection />
