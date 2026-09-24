@@ -46,9 +46,9 @@ function App() {
             <CinematicVideo />
             <HeroSection />
             <About />
-            <ProjectsSection />
             <Experience />
             <Skills />
+            <ProjectsSection />
             <Currently />
             <Contact />
           </main>

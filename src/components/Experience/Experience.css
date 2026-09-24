@@ -1,108 +1,118 @@
-.exp-section {
-  background: var(--ink-2);
+.journey-section {
+  background: var(--ink);
+  color: var(--bone);
+  overflow: hidden;
+  position: relative;
+  min-height: 100svh;
   border-top: 1px solid var(--line);
 }
 
-.exp-label-row { margin-bottom: 32px; }
-
-.exp-heading {
-  color: var(--bone);
-  margin-bottom: 80px;
-}
-
-/* Timeline layout */
-.exp-timeline {
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 0 40px;
-}
-
-/* Line track */
-.exp-timeline-track {
-  position: relative;
-  padding-top: 16px;
-}
-
-.exp-timeline-line {
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%) scaleY(0);
-  transform-origin: top center;
-  width: 1px;
+/* Horizontal Track (Desktop) */
+.journey-track {
+  display: flex;
   height: 100%;
-  background: linear-gradient(to bottom, var(--tide), var(--bone) 60%, transparent);
+  width: max-content;
+  will-change: transform;
 }
 
-/* Entries */
-.exp-entries {
-  display: flex;
-  flex-direction: column;
+/* Intro Block */
+.journey-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
 }
 
-.exp-entry {
-  position: relative;
-  display: flex;
-  gap: 0;
-  padding-bottom: 56px;
-}
-
-.exp-entry:last-child { padding-bottom: 0; }
-
-/* Dot — sits over the line */
-.exp-dot {
-  position: absolute;
-  left: -52px; /* grid gap = 40, track = 32 → dot at midpoint of track */
-  top: 18px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--dot-color, var(--mist));
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.4), 0 0 8px var(--dot-color, transparent);
-  flex-shrink: 0;
-}
-
-.exp-entry-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.exp-entry-top {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 4px;
-}
-
-.exp-type { color: var(--tide) !important; }
-.exp-period { color: var(--dim) !important; }
-
-.exp-role {
+.journey-huge-title {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.5vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
+  font-size: clamp(4rem, 12vw, 13rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+/* Chapter Block */
+.journey-chapter {
+  /* scale down inactive chapters */
+  transform: scale(0.88);
+  opacity: 0.3;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
+}
+
+.journey-chapter.active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.chapter-bg-year {
+  font-family: var(--font-display);
   color: var(--bone);
+  opacity: 0;
+  transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate(-50%, -45%) scale(0.9);
+  pointer-events: none;
 }
 
-.exp-org {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--mist);
-  font-weight: 400;
+.journey-chapter.active .chapter-bg-year {
+  opacity: 0.04; /* Very subtle enormous text */
+  transform: translate(-50%, -50%) scale(1);
 }
 
-.exp-desc {
-  max-width: 580px;
-  margin-top: 4px;
+/* Chapter Images */
+.chapter-visual {
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
 }
 
-@media (max-width: 768px) {
-  .exp-timeline {
-    grid-template-columns: 24px 1fr;
-    gap: 0 24px;
+/* Responsive (Mobile vertical layout) */
+@media (max-width: 767px) {
+  .journey-section {
+    height: auto;
+    overflow: visible;
   }
-
-  .exp-dot { left: -34px; }
+  
+  .journey-track {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding-bottom: 80px;
+  }
+  
+  .journey-intro {
+    width: 100%;
+    height: 85vh;
+    padding: 0 max(5vw, 24px);
+  }
+  
+  .journey-chapter {
+    width: 100%;
+    padding: 80px max(5vw, 24px);
+    transform: none; /* Disable horizontal scale down on mobile */
+    opacity: 0.5;
+  }
+  
+  .journey-chapter.active {
+    opacity: 1;
+  }
+  
+  .chapter-visual {
+    height: 350px;
+    margin-top: 40px;
+  }
+  
+  .chapter-content {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+  
+  .journey-progress-bar {
+    display: none;
+  }
+  
+  .journey-outro {
+    width: 100%;
+    padding: 100px max(5vw, 24px);
+  }
 }
