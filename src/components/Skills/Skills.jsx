@@ -90,11 +90,11 @@ const SKILL_DATA = {
 };
 
 const ORBIT_POSITIONS = {
-  FRONTEND: { x: '50%', y: '15%', radius: 250 },
-  BACKEND: { x: '15%', y: '45%', radius: 300 },
-  LANGUAGES: { x: '35%', y: '80%', radius: 200 },
-  TOOLS: { x: '85%', y: '40%', radius: 350 },
-  CREATIVE: { x: '75%', y: '80%', radius: 280 }
+  FRONTEND: { x: '50%', y: '25%', radius: 175 },
+  BACKEND: { x: '25%', y: '45%', radius: 210 },
+  LANGUAGES: { x: '35%', y: '65%', radius: 140 },
+  TOOLS: { x: '75%', y: '45%', radius: 245 },
+  CREATIVE: { x: '65%', y: '65%', radius: 196 }
 };
 
 export default function Skills() {
@@ -319,7 +319,7 @@ export default function Skills() {
                   </div>
                   
                   {/* Surrounding Tech Stack (Visible on hover) */}
-                  <div className={`orbit-tech-cluster ${isActive ? 'visible' : ''}`}>
+                  <div className={`orbit-tech-cluster ${isActive ? 'visible' : ''} ${key === 'FRONTEND' ? 'cluster-down' : 'cluster-up'}`}>
                     {data.items.slice(0, 5).map((item, i) => (
                       <span 
                         key={item.name} 

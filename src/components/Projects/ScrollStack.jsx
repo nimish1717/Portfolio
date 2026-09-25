@@ -203,6 +203,10 @@ const ScrollStack = ({
     cardsRef.current = cards;
 
     // Record static natural top positions before any transforms are applied
+    cards.forEach((card) => {
+      card.style.transform = 'none';
+    });
+    
     initialTopsRef.current = cards.map((card) => {
       const rect = card.getBoundingClientRect();
       return rect.top + window.scrollY;

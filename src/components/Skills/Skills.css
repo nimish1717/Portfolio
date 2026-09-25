@@ -15,6 +15,7 @@
   top: 80px;
   left: max(5vw, 24px);
   max-width: 450px;
+  pointer-events: none;
 }
 
 .skills-label {
@@ -57,6 +58,7 @@
   top: 80px;
   right: max(5vw, 24px);
   width: 320px;
+  pointer-events: none;
 }
 
 .skills-focus-panel {
@@ -118,10 +120,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 1000px;
-  height: 1000px;
-  margin-top: -500px;
-  margin-left: -500px;
+  width: 700px;
+  height: 700px;
+  margin-top: -350px;
+  margin-left: -350px;
   pointer-events: none;
   transition: transform 0.3s ease-out;
 }
@@ -220,7 +222,6 @@
 
 .orbit-tech-cluster {
   position: absolute;
-  top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,6 +229,15 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+}
+
+.orbit-tech-cluster.cluster-down {
+  top: 40px;
+}
+
+.orbit-tech-cluster.cluster-up {
+  bottom: 100%;
+  margin-bottom: 10px;
 }
 
 .orbit-tech-cluster.visible {
