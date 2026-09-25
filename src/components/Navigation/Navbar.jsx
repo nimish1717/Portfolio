@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import Magnet from '../ui/Magnet';
 
 const NAV_LINKS = [
-  { label: 'Work',       href: '#projects'   },
   { label: 'About',      href: '#about'       },
+  { label: 'Work',       href: '#projects'    },
   { label: 'Experience', href: '#experience'  },
   { label: 'Contact',    href: '#contact'     },
 ];

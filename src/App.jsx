@@ -9,7 +9,6 @@ import About from './components/About/About';
 import ProjectsSection from './components/Projects/ProjectsSection';
 import Experience from './components/Experience/Experience';
 import Skills from './components/Skills/Skills';
-import Currently from './components/Currently/Currently';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
 import CinematicVideo from './components/Background/CinematicVideo';
@@ -46,10 +45,9 @@ function App() {
             <CinematicVideo />
             <HeroSection />
             <About />
-            <Experience />
             <Skills />
             <ProjectsSection />
-            <Currently />
+            <Experience />
             <Contact />
           </main>
 

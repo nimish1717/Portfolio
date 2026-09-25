@@ -148,7 +148,7 @@ export default function Experience() {
         
         {/* Intro */}
         <div className="journey-intro flex-shrink-0 w-screen h-[100svh] md:h-full flex flex-col justify-center px-[5vw] lg:px-24 relative">
-          <div className="journey-label mb-8">04 / JOURNEY</div>
+          <div className="journey-label mb-8">05 / JOURNEY</div>
           <h2 className="journey-huge-title leading-[0.85]">
             <span className="text-[var(--bone)] block">FROM ZERO</span>
             <span className="text-[var(--tide)] flex items-center gap-[2vw]">

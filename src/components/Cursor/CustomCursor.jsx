@@ -20,7 +20,7 @@ export default function CustomCursor() {
     if (isTouch) return;
 
     const dot  = dotRef.current;
-    const ring = ringRef.current;
+    const ringElement = ringRef.current;
 
     const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -59,8 +59,10 @@ export default function CustomCursor() {
     };
 
     const onEnter = (e) => {
-      const el = e.target.closest('[data-cursor]');
-      if (el) setState(el.dataset.cursor);
+      if (e.target && typeof e.target.closest === 'function') {
+        const el = e.target.closest('[data-cursor]');
+        if (el) setState(el.dataset.cursor);
+      }
     };
     const onLeave = () => setState('default');
 
