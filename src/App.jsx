@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useLenis } from './hooks/useLenis';
-import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 import CustomCursor from './components/Cursor/CustomCursor';
 import MeshFlow from './components/Background/MeshFlow';
 import Navbar from './components/Navigation/Navbar';
@@ -11,10 +10,10 @@ import Experience from './components/Experience/Experience';
 import Skills from './components/Skills/Skills';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
-import CinematicVideo from './components/Background/CinematicVideo';
 
 function App() {
-  const [loaded, setLoaded] = useState(false);
+  // Always true to bypass loading screen
+  const [loaded, setLoaded] = useState(true);
 
   // Enable Lenis only after load
   useLenis(loaded);
@@ -32,28 +31,20 @@ function App() {
     <>
       <CustomCursor />
 
-      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
+      <MeshFlow />
 
-      {loaded && (
-        <>
-          {/* Global dot-grid background */}
-          <MeshFlow />
+      <Navbar />
 
-          <Navbar />
+      <main style={{ position: 'relative', zIndex: 1 }}>
+        <HeroSection />
+        <About />
+        <Skills />
+        <ProjectsSection />
+        <Experience />
+        <Contact />
+      </main>
 
-          <main style={{ position: 'relative', zIndex: 1 }}>
-            <CinematicVideo />
-            <HeroSection />
-            <About />
-            <Skills />
-            <ProjectsSection />
-            <Experience />
-            <Contact />
-          </main>
-
-          <Footer />
-        </>
-      )}
+      <Footer />
     </>
   );
 }

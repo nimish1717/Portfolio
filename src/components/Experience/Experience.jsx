@@ -67,7 +67,7 @@ export default function Experience() {
         scrollTrigger: {
           trigger: sectionRef.current,
           pin: true,
-          scrub: 1,
+          scrub: true,
           start: 'top top',
           end: () => `+=${scrollDist}`,
           invalidateOnRefresh: true,

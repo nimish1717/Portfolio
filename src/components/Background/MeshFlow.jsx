@@ -63,7 +63,7 @@ export default function MeshFlow() {
       mouse.y = lerp(mouse.y, mouse.ty, 0.08);
 
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = 'rgba(237,234,228,0.18)';
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
 
       for (const p of points) {
         const dx = p.x - mouse.x;

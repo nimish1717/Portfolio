@@ -61,8 +61,8 @@
 
 /* Chapter Images */
 .chapter-visual {
-  border: 1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive (Mobile vertical layout) */

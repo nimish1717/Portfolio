@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import './HeroSection.css'; // Just keeping it for any specific custom CSS
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,18 +47,35 @@ export const HeroSection = () => {
   }, []);
 
   return (
-    <section id="hero-section" className="relative w-screen h-[100dvh] overflow-hidden bg-transparent text-[#EDEAE4] font-sans selection:bg-[#46B7FF] selection:text-black cursor-none">
+    <section id="hero-section" className="relative w-screen h-[100dvh] overflow-hidden bg-transparent text-[#EDEAE4] font-sans selection:bg-[var(--tide)] selection:text-black cursor-none">
       
+      {/* Background Image Layer */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-[var(--ink)]">
+        <motion.img 
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          src="/images/hero-sunset.jpg" 
+          alt="Sunset Coding Setup" 
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Dark Vignettes and Gradients to blend into the rest of the site */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--ink)]/40 to-[var(--ink)]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--ink)]/90 via-[var(--ink)]/30 to-transparent"></div>
+        <div className="absolute inset-0 bg-black/20"></div> {/* Global dim for readability */}
+      </div>
+
       {/* ================= 1. MINIMAL CUSTOM CURSOR ================= */}
       {cursorPos.x >= 0 && (
         <motion.div
-          className="fixed top-0 left-0 pointer-events-none z-50 rounded-full border border-[#46B7FF]/40 flex items-center justify-center backdrop-blur-[1px]"
+          className="fixed top-0 left-0 pointer-events-none z-50 rounded-full border flex items-center justify-center backdrop-blur-[1px]"
+          style={{ borderColor: 'rgba(255,123,0,0.4)' }}
           animate={{
             x: cursorPos.x - (isHovered ? 24 : 5),
             y: cursorPos.y - (isHovered ? 24 : 5),
             width: isHovered ? 48 : 10,
             height: isHovered ? 48 : 10,
-            backgroundColor: isHovered ? 'rgba(70, 183, 255, 0.1)' : 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: isHovered ? 'rgba(255,123,0,0.15)' : 'rgba(255, 255, 255, 0.95)',
           }}
           transition={{ type: 'spring', damping: 30, stiffness: 350, mass: 0.5 }}
         />
@@ -66,20 +84,20 @@ export const HeroSection = () => {
       {/* ================= 2. CONTENT LAYER ================= */}
       <div className="relative z-10 flex flex-col justify-between h-full w-full max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 pt-6 pb-8 pointer-events-none">
         
-        {/* Navigation Bar Header (Fades out when scrolling, main Navbar takes over) */}
+        {/* Navigation Bar Header */}
         <header className="relative flex items-center justify-between w-full pointer-events-auto mt-4">
           <a
             href="#"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-[#EDEAE4] hover:opacity-75 transition-opacity"
+            className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-white hover:opacity-75 transition-opacity"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             NIMISH.
           </a>
 
           <nav
-            className="hidden md:flex items-center space-x-8 lg:space-x-10 text-[11px] tracking-[0.28em] font-light uppercase text-gray-400 absolute left-1/2 -translate-x-1/2"
+            className="hidden md:flex items-center space-x-8 lg:space-x-10 text-[11px] tracking-[0.28em] font-light uppercase text-gray-300 absolute left-1/2 -translate-x-1/2"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             {navItems.map((item) => (
@@ -91,7 +109,7 @@ export const HeroSection = () => {
                 className="relative group py-1 transition-colors duration-300 hover:text-white"
               >
                 {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#46B7FF]/50 transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[var(--tide)]/70 transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -100,11 +118,11 @@ export const HeroSection = () => {
             href="#contact"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="group flex items-center space-x-2 text-[11px] tracking-[0.24em] font-light uppercase py-2 px-4 border border-[#46B7FF]/30 hover:border-[#46B7FF] text-[#EDEAE4] transition-all duration-300 backdrop-blur-sm ml-auto md:ml-0"
+            className="group flex items-center space-x-2 text-[11px] tracking-[0.24em] font-light uppercase py-2 px-4 border border-[var(--tide)]/40 hover:border-[var(--tide)] text-white transition-all duration-300 backdrop-blur-sm ml-auto md:ml-0"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
             <span>LET&apos;S TALK</span>
-            <span className="transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-xs">
+            <span className="transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-xs text-[var(--tide)]">
               ↗
             </span>
           </a>
@@ -113,7 +131,7 @@ export const HeroSection = () => {
         {/* Main Hero Row */}
         <div className="relative flex flex-col md:flex-row items-center justify-between w-full flex-1 pt-12 md:pt-20">
           
-          {/* LEFT: New Name Hierarchy */}
+          {/* LEFT: Name Hierarchy */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -123,13 +141,13 @@ export const HeroSection = () => {
             {/* 1. Name Reveal */}
             <motion.div variants={fadeUpVariants} className="relative select-none z-10 mb-2">
               <h1
-                className="text-[4rem] sm:text-[6rem] md:text-[7rem] lg:text-[9rem] xl:text-[10.5rem] tracking-tight uppercase leading-[0.8]"
+                className="text-[4rem] sm:text-[6rem] md:text-[7rem] lg:text-[9.5rem] xl:text-[10.5rem] tracking-tight uppercase leading-[0.8]"
                 style={{ fontFamily: "'Bebas Neue', sans-serif" }}
               >
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#E2F1FF] to-[#80BFFF] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFF3EB] to-[#FFC499] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
                   NIMISH
                 </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#A9D8FF] via-[#46B7FF] to-[#0D62A6] drop-shadow-[0_8px_25px_rgba(70,183,255,0.35)] -mt-2 lg:-mt-4">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-[#FFC499] via-[#FF7B00] to-[#993D00] drop-shadow-[0_8px_25px_rgba(255,123,0,0.4)] -mt-2 lg:-mt-4">
                   AGRAWAL
                 </span>
               </h1>
@@ -138,20 +156,20 @@ export const HeroSection = () => {
             {/* 2. Role */}
             <motion.div variants={fadeUpVariants} className="mb-6 mt-4">
               <p
-                className="text-xs sm:text-sm md:text-[15px] font-medium tracking-[0.3em] uppercase text-gray-300"
+                className="text-xs sm:text-sm md:text-[15px] font-medium tracking-[0.3em] uppercase text-gray-200"
                 style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
-                SOFTWARE ENGINEER <span className="text-[#46B7FF] mx-1.5 opacity-60">/</span> CREATIVE DEVELOPER
+                SOFTWARE ENGINEER <span className="text-[var(--tide)] mx-1.5 opacity-80">/</span> CREATIVE DEVELOPER
               </p>
             </motion.div>
 
-            {/* 3. Creative Statement (Tertiary now) */}
+            {/* 3. Creative Statement */}
             <motion.div
               variants={fadeUpVariants}
-              className="mb-8 pl-1 md:pl-0 border-l-2 border-[#46B7FF]/30 md:border-none pl-4 md:pl-0"
+              className="mb-8 pl-1 md:pl-0 border-l-2 border-[var(--tide)]/40 md:border-none pl-4 md:pl-0"
             >
-               <h2 className="text-xl sm:text-2xl md:text-[1.75rem] font-light text-gray-400 tracking-wide leading-snug" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
-                 <span className="text-[#E2F1FF] font-medium">Crafting digital worlds.</span> <br className="hidden md:block" /> Turning bold ideas into seamless, high-performance experiences.
+               <h2 className="text-xl sm:text-2xl md:text-[1.75rem] font-light text-gray-300 tracking-wide leading-snug" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+                 <span className="text-white font-medium drop-shadow-md">Crafting digital worlds.</span> <br className="hidden md:block" /> Turning bold ideas into seamless, high-performance experiences.
                </h2>
             </motion.div>
 
@@ -166,11 +184,11 @@ export const HeroSection = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 whileHover={{ scale: 1.02 }}
-                className="relative inline-flex items-center justify-center w-full sm:w-auto space-x-3 px-8 py-4 border border-[#46B7FF]/50 bg-[#060608]/80 hover:border-[#46B7FF] text-[#E2F1FF] hover:text-white text-[11px] font-medium tracking-[0.24em] uppercase transition-all duration-300 shadow-[0_0_25px_rgba(70,183,255,0.18)]"
+                className="relative inline-flex items-center justify-center w-full sm:w-auto space-x-3 px-8 py-4 border border-[var(--tide)]/60 bg-[var(--ink)]/70 hover:border-[var(--tide)] text-white text-[11px] font-bold tracking-[0.24em] uppercase transition-all duration-300 shadow-[0_0_25px_rgba(255,123,0,0.25)] backdrop-blur-md"
               >
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#E2F1FF]/40 to-transparent pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--tide)]/60 to-transparent pointer-events-none" />
                 <span>EXPLORE MY WORK</span>
-                <span className="transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-xs">
+                <span className="transform transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-xs text-[var(--tide)]">
                   ↗
                 </span>
               </motion.a>
@@ -182,7 +200,7 @@ export const HeroSection = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 whileHover={{ scale: 1.02 }}
-                className="group relative inline-flex items-center justify-center w-full sm:w-auto space-x-2 px-8 py-4 border border-[#46B7FF]/20 hover:border-[#46B7FF]/50 text-gray-400 hover:text-[#E2F1FF] text-[11px] font-medium tracking-[0.24em] uppercase transition-all duration-300"
+                className="group relative inline-flex items-center justify-center w-full sm:w-auto space-x-2 px-8 py-4 border border-white/20 hover:border-white/50 text-gray-300 hover:text-white text-[11px] font-medium tracking-[0.24em] uppercase transition-all duration-300 backdrop-blur-sm bg-black/20"
               >
                 <span>DOWNLOAD RESUME</span>
                 <span className="transform transition-transform duration-300 group-hover:translate-y-0.5 text-xs">
@@ -191,7 +209,6 @@ export const HeroSection = () => {
               </motion.a>
             </motion.div>
           </motion.div>
-
         </div>
       </div>
     </section>

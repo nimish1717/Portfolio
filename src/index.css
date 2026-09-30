@@ -8,22 +8,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─────────────────────────────────────────
-   Design Tokens
-───────────────────────────────────────── */
 :root {
-  /* Colours */
-  --ink:          #060608;
-  --ink-2:        #0D0D11;
-  --ink-3:        #141418;
-  --bone:         #EDEAE4;
-  --mist:         rgba(237,234,228,0.55);
-  --dim:          rgba(237,234,228,0.25);
-  --line:         rgba(237,234,228,0.07);
-  --line-strong:  rgba(237,234,228,0.14);
-  --tide:         #46B7FF;      /* accent */
-  --tide-glow:    rgba(70,183,255,0.18);
-  --tide-dim:     rgba(70,183,255,0.08);
+  /* Premium Sunset Dark Theme */
+  --ink:          #0C080A;      /* Deep warm obsidian */
+  --ink-2:        #151013;      /* Slightly lighter warm dark */
+  --ink-3:        #1E151A;      /* Cards and panels */
+  --bone:         #FFF3EB;      /* Warm white text */
+  --mist:         rgba(255, 243, 235, 0.7);  /* Subdued text */
+  --dim:          rgba(255, 243, 235, 0.35); /* Meta text */
+  --line:         rgba(255, 243, 235, 0.08); /* Borders */
+  --line-strong:  rgba(255, 243, 235, 0.15); /* Hover borders */
+  
+  /* Cyber Sunset Accents */
+  --tide:         #FF7B00;      /* Vibrant Sunset Orange */
+  --tide-glow:    rgba(255, 123, 0, 0.4);
+  --tide-dim:     rgba(255, 123, 0, 0.1);
+  --accent-2:     #FFC499;      /* Light peach */
+  --accent-3:     #993D00;      /* Deep rust orange */
 
   /* Typography */
   --font-display: 'Bricolage Grotesque', sans-serif;
@@ -331,7 +332,7 @@ body::after {
 }
 
 .navbar.scrolled {
-  background: rgba(6,6,8,0.82);
+  background: rgba(12, 8, 10, 0.85); /* Deep warm obsidian, translucent */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   padding-top: 14px;

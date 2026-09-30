@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const SKILL_DATA = {
   FRONTEND: {
     label: 'Frontend',
-    color: '#46B7FF', // Pale blue
+    color: '#FF7B00', // Pale blue
     items: [
       { name: 'React', desc: 'Interactive frontend interfaces' },
       { name: 'TypeScript', desc: 'Type-safe JavaScript' },
