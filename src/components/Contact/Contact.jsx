@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Instagram, Mail, Clock, ArrowUpRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
 
 const EMAIL = 'nimish.agrawal@thapar.edu';
@@ -50,28 +51,35 @@ export default function Contact() {
     setStatus('sending');
 
     try {
-      const endpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/placeholder';
-      
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          name: formState.name,
-          email: formState.email,
-          reason: formState.reason,
-          message: formState.message,
-          _replyto: formState.email,
-          _subject: `New Portfolio Contact — [${formState.reason}]`
-        })
-      });
+      // These keys should ideally be in your .env.local file
+      // e.g., VITE_EMAILJS_SERVICE_ID=service_123abc
+      const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+      const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+      const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
 
-      if (response.ok) {
-        setStatus('success');
-      } else {
-        setStatus('error');
-      }
+      const templateParams = {
+        from_name: formState.name,
+        from_email: formState.email,
+        reason: formState.reason,
+        message: formState.message,
+      };
+
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+      
+      setStatus('success');
+      // Reset form after successful submission
+      setFormState({ name: '', email: '', reason: 'Project', message: '', honeypot: '' });
+      
+      setTimeout(() => {
+        setStatus('idle');
+      }, 5000);
+      
     } catch (error) {
+      console.error("EmailJS Error:", error);
       setStatus('error');
+      setTimeout(() => {
+        setStatus('idle');
+      }, 5000);
     }
   };
 

@@ -1,6 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ENRICHED_PROJECTS = [
   {
@@ -201,190 +204,147 @@ const MockupUI = ({ id }) => {
   }
 };
 
-const ProjectCard = ({ project, index, scrollYProgress }) => {
-  const total = ENRICHED_PROJECTS.length;
-  
-  // Calculate specific points to pass to WAAPI safely
-  const inputs = Array.from({ length: total }).map((_, i) => i / (total - 1));
-  const centerPos = index / (total - 1);
-
-  // Maps progress to scale and opacity
-  const scaleOutputs = inputs.map(p => Math.abs(p - centerPos) < 0.01 ? 1 : 0.85);
-  const opacityOutputs = inputs.map(p => Math.abs(p - centerPos) < 0.01 ? 1 : 0.4);
-  const imageScaleOutputs = inputs.map(p => Math.abs(p - centerPos) < 0.01 ? 1 : 1.05);
-
-  const scale = useTransform(scrollYProgress, inputs, scaleOutputs);
-  const opacity = useTransform(scrollYProgress, inputs, opacityOutputs);
-  const imageScale = useTransform(scrollYProgress, inputs, imageScaleOutputs);
-
-  return (
-    <motion.div 
-      style={{ scale, opacity }}
-      className="flex w-[85vw] lg:w-[70vw] max-w-[1200px] h-[75vh] max-h-[750px] p-6 lg:p-10 bg-[#060608]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl group flex-shrink-0 relative overflow-hidden"
-    >
-      {/* Number watermark inside card */}
-      <div className="absolute -top-10 -left-10 text-[15rem] font-bebas text-white/[0.02] pointer-events-none z-0 select-none">
-        {String(index + 1).padStart(2, '0')}
-      </div>
-
-      {/* Left: Text Content (40%) */}
-      <div className="w-full lg:w-[40%] pr-0 lg:pr-10 flex flex-col justify-center relative z-10">
-        <div className="flex items-center space-x-4 mb-4 lg:mb-6">
-           <span className="font-mono text-xs text-gray-500 tracking-widest">{String(index + 1).padStart(2, '0')} / 05</span>
-        </div>
-        
-        <h3 className="text-5xl lg:text-6xl xl:text-7xl font-bebas text-white mb-2 tracking-wide uppercase">{project.name}</h3>
-        <p className="font-mono text-[9px] lg:text-[10px] tracking-[0.2em] text-[#46B7FF] uppercase mb-6 lg:mb-8">{project.category}</p>
-        
-        <p className="text-gray-400 font-montserrat font-light text-xs lg:text-sm leading-relaxed mb-8 max-w-sm">
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2 mb-8 lg:mb-12">
-          {project.tech.map(t => (
-            <span key={t} className="px-3 py-1.5 text-[8px] lg:text-[9px] font-mono border border-white/10 text-gray-400 rounded bg-[#0A0A0F]">
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex items-center space-x-4 mt-auto lg:mt-0">
-           <button 
-             className="bg-[#46B7FF] hover:bg-white text-black transition-colors px-6 py-3.5 rounded text-[10px] font-bold tracking-widest flex items-center space-x-2 group/btn" 
-             onClick={() => window.open(project.link, '_blank')}
-           >
-              <span>VIEW PROJECT</span>
-              <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-           </button>
-           <button 
-             className="border border-white/20 hover:border-white text-white transition-colors px-6 py-3.5 rounded text-[10px] font-bold tracking-widest flex items-center space-x-2 group/btn2 hidden sm:flex" 
-             onClick={() => window.open(project.link, '_blank')}
-           >
-              <span>GITHUB</span>
-              <ArrowUpRight size={14} className="group-hover/btn2:translate-x-0.5 group-hover/btn2:-translate-y-0.5 transition-transform" />
-           </button>
-        </div>
-      </div>
-
-      {/* Right: Image Preview (60%) */}
-      <div className="hidden lg:flex w-[60%] h-full relative rounded-xl overflow-hidden bg-[#0A0A0E] border border-white/5 items-center justify-center relative z-10 group-hover:shadow-[0_0_30px_rgba(70,183,255,0.08)] transition-all duration-700">
-         <motion.div style={{ scale: imageScale }} className="w-full h-full relative origin-center">
-            <MockupUI id={project.id} />
-         </motion.div>
-         {/* Subtle overlay to blend edges */}
-         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(6,6,8,0.5)_100%)] pointer-events-none" />
-      </div>
-
-    </motion.div>
-  );
-};
-
 export const ProjectsSection = () => {
+  const sectionRef = useRef(null);
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  useEffect(() => {
+    let mm = gsap.matchMedia();
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    let index = Math.round(latest * (ENRICHED_PROJECTS.length - 1));
-    if (index >= ENRICHED_PROJECTS.length) index = ENRICHED_PROJECTS.length - 1;
-    if (index < 0) index = 0;
-    setActiveIndex(index);
-  });
+    mm.add("(min-width: 768px)", () => {
+      const getScrollAmount = () => {
+        let containerWidth = containerRef.current.scrollWidth;
+        return (containerWidth - window.innerWidth);
+      };
 
-  // For 5 items, horizontal translation is perfect with w-max and -100% + 100vw
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "calc(-100% + 100vw)"]);
+      const tween = gsap.to(containerRef.current, {
+        x: () => -getScrollAmount(),
+        ease: "none"
+      });
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: () => `+=${getScrollAmount() * 1.5}`,
+        pin: true,
+        animation: tween,
+        scrub: 1.5,
+        invalidateOnRefresh: true,
+      });
+    });
+
+    // Mobile: no pin, just vertical list
+    mm.add("(max-width: 767px)", () => {
+       const cards = gsap.utils.toArray('.mobile-card');
+       cards.forEach((card) => {
+         gsap.from(card, {
+           opacity: 0,
+           y: 50,
+           duration: 0.8,
+           scrollTrigger: {
+             trigger: card,
+             start: "top 85%",
+             toggleActions: "play none none reverse"
+           }
+         });
+       });
+    });
+
+    return () => mm.revert();
+  }, []);
 
   return (
-    <section id="projects" className="relative w-full bg-[#030305] text-[#EDEAE4] font-sans selection:bg-[#46B7FF] selection:text-black">
+    <section id="projects" ref={sectionRef} className="relative w-full bg-[#030305] text-[#EDEAE4] font-sans selection:bg-[#46B7FF] selection:text-black overflow-hidden">
       
-      {/* 
-        ========================================
-        DESKTOP EXPERIENCE (Horizontal Pinned Scroll)
-        ========================================
-      */}
-      <div ref={containerRef} className="hidden md:block relative" style={{ height: `${ENRICHED_PROJECTS.length * 100}vh` }}>
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-[#030305] bg-[url('/grid.svg')] bg-[length:50px_50px] bg-center opacity-30 z-0 pointer-events-none" />
+      
+      {/* DESKTOP HORIZONTAL SCROLL */}
+      <div className="hidden md:flex h-screen items-center px-12 lg:px-24 gap-12 lg:gap-20" ref={containerRef}>
         
-        <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center bg-[#030305] bg-[url('/grid.svg')] bg-[length:50px_50px] bg-center relative">
-          <div className="absolute inset-0 bg-[#030305]/95 z-0" />
-          
-          {/* Top Left Header */}
-          <div className="absolute top-12 left-12 lg:left-16 xl:left-24 z-50 pointer-events-none">
-            <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-[#46B7FF] block mb-4">
-              04 / PROJECTS
-            </span>
-            <div className="flex items-start space-x-12">
-              <h2 className="text-6xl xl:text-7xl tracking-tight uppercase leading-[0.85]" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-                <span className="block text-[#EDEAE4]">SELECTED</span>
-                <span className="block text-[#46B7FF]">WORK.</span>
-              </h2>
-              <p className="text-[10px] font-mono text-gray-400 mt-2 tracking-widest uppercase max-w-[200px] leading-relaxed hidden xl:block">
-                A few things I've built —<br/>turning ideas into real,<br/>working products.
-              </p>
-            </div>
+        {/* Intro Slide */}
+        <div className="w-[35vw] min-w-[350px] max-w-[500px] flex-shrink-0 flex flex-col justify-center relative z-10">
+          <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-[#46B7FF] block mb-6">
+            04 / PROJECTS
+          </span>
+          <h2 className="text-7xl lg:text-[8rem] tracking-tight uppercase leading-[0.85]" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+            <span className="block text-[#EDEAE4]">SELECTED</span>
+            <span className="block text-[#46B7FF]">WORK.</span>
+          </h2>
+          <p className="text-xs lg:text-sm font-mono text-gray-500 tracking-widest uppercase leading-relaxed mt-8">
+            Scroll to explore some of the things I've built. Turning ideas into real, working products.
+          </p>
+          <div className="mt-12 flex items-center space-x-4">
+             <div className="h-px w-16 bg-[#46B7FF]"></div>
+             <span className="text-[10px] font-mono tracking-widest text-[#46B7FF]">SCROLL</span>
           </div>
-
-          {/* Top Right Scroll Indicator */}
-          <div className="absolute top-16 right-12 lg:right-16 xl:right-24 z-50 pointer-events-none flex items-center space-x-4">
-            <span className="text-[9px] font-mono text-gray-500 tracking-widest uppercase">SCROLL TO EXPLORE</span>
-            <div className="w-24 h-px bg-white/20 relative">
-              <motion.div 
-                 style={{ left: useTransform(scrollYProgress, [0, 1], ["0%", "100%"]) }}
-                 className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#46B7FF]"
-              />
-            </div>
-          </div>
-
-          {/* Bottom Left Branding */}
-          <div className="absolute bottom-12 left-12 lg:left-16 xl:left-24 z-50 pointer-events-none">
-            <div className="text-white text-xs font-bold tracking-widest uppercase mb-1 font-mono">NIMISH AGRAWAL</div>
-            <div className="text-gray-500 font-mono text-[9px] tracking-widest uppercase">SOFTWARE ENGINEER · CREATIVE DEVELOPER</div>
-          </div>
-
-          {/* Bottom Right Progress Indicator */}
-          <div className="absolute bottom-12 right-12 lg:right-16 xl:right-24 z-50 pointer-events-none flex items-center space-x-6">
-            <span className="font-mono text-[10px] tracking-widest text-white">
-              {String(activeIndex + 1).padStart(2, '0')} / 05
-            </span>
-            <div className="flex space-x-2">
-               {ENRICHED_PROJECTS.map((_, i) => (
-                  <div key={i} className={`h-px transition-all duration-300 ${i === activeIndex ? 'w-10 bg-[#46B7FF]' : 'w-4 bg-white/20'}`} />
-               ))}
-            </div>
-          </div>
-
-          {/* Scrolling Horizontal Track */}
-          {/* Note: Viewport width is 100vw, Card width is 70vw. 
-              To perfectly center the first card, left padding is exactly (100 - 70) / 2 = 15vw.
-              Gap is 5vw. So pl-[15vw] pr-[15vw] gap-[5vw] with w-max perfectly aligns everything! */}
-          <motion.div 
-            style={{ x, width: 'max-content' }} 
-            className="flex items-center h-screen px-[15vw] gap-[5vw] z-10"
-          >
-            {ENRICHED_PROJECTS.map((project, i) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
-                index={i} 
-                scrollYProgress={scrollYProgress}
-              />
-            ))}
-          </motion.div>
-          
         </div>
+
+        {/* Project Cards Row */}
+        {ENRICHED_PROJECTS.map((project, i) => (
+          <div key={project.id} className="w-[75vw] max-w-[850px] h-[70vh] max-h-[600px] flex-shrink-0 bg-[#060608]/80 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden flex shadow-2xl relative group">
+             
+             {/* Left/Top Content */}
+             <div className="w-[45%] p-8 lg:p-10 flex flex-col justify-between relative z-10 bg-[#060608]">
+               <div>
+                  <div className="flex items-center space-x-3 mb-6 lg:mb-8">
+                    <span className="font-mono text-xs text-gray-500 tracking-widest">{String(i + 1).padStart(2, '0')} / {String(ENRICHED_PROJECTS.length).padStart(2, '0')}</span>
+                  </div>
+                  
+                  <h3 className="text-4xl lg:text-6xl font-bebas text-white mb-2 tracking-wide uppercase">{project.name}</h3>
+                  <p className="font-mono text-[9px] lg:text-[10px] tracking-[0.2em] text-[#46B7FF] uppercase mb-4 lg:mb-6">{project.category}</p>
+                  
+                  <p className="text-gray-400 font-montserrat font-light text-xs lg:text-sm leading-relaxed">
+                    {project.description}
+                  </p>
+               </div>
+
+               <div>
+                  <div className="flex flex-wrap gap-2 mb-6 lg:mb-8">
+                    {project.tech.map(t => (
+                      <span key={t} className="px-3 py-1.5 text-[9px] font-mono border border-white/10 text-gray-400 rounded bg-[#0A0A0E]">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                     <button 
+                       className="bg-[#46B7FF] hover:bg-white text-black transition-colors px-6 py-3 rounded text-[10px] font-bold tracking-widest flex items-center space-x-2 group/btn" 
+                       onClick={() => window.open(project.link, '_blank')}
+                     >
+                        <span>VIEW</span>
+                        <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                     </button>
+                     <button 
+                       className="border border-white/20 hover:border-white text-white transition-colors px-6 py-3 rounded text-[10px] font-bold tracking-widest flex items-center space-x-2 group/btn2" 
+                       onClick={() => window.open(project.link, '_blank')}
+                     >
+                        <span>GITHUB</span>
+                        <ArrowUpRight size={14} className="group-hover/btn2:translate-x-0.5 group-hover/btn2:-translate-y-0.5 transition-transform" />
+                     </button>
+                  </div>
+               </div>
+             </div>
+
+             {/* Right Image area */}
+             <div className="w-[55%] relative h-full bg-[#0A0A0E] border-l border-white/5 overflow-hidden">
+               <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700 ease-out">
+                  <MockupUI id={project.id} />
+               </div>
+               {/* Subtle gradient overlay */}
+               <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-transparent to-transparent opacity-80" />
+             </div>
+
+          </div>
+        ))}
+
+        {/* End spacing */}
+        <div className="w-[10vw] flex-shrink-0" />
       </div>
 
-      {/* 
-        ========================================
-        MOBILE EXPERIENCE (Vertical Sequence)
-        ========================================
-      */}
-      <div className="md:hidden flex flex-col px-6 pt-32 pb-24 bg-[#030305]">
-        
-        {/* Mobile Header */}
+      {/* MOBILE VERTICAL LAYOUT */}
+      <div className="md:hidden flex flex-col px-6 py-32 bg-[#030305] relative z-10">
         <div className="mb-20">
           <span className="text-[10px] font-mono tracking-[0.35em] uppercase text-[#46B7FF] block mb-4">
             04 / PROJECTS
@@ -394,48 +354,59 @@ export const ProjectsSection = () => {
             <span className="block text-[#46B7FF]">WORK.</span>
           </h2>
           <p className="text-[10px] font-mono text-gray-500 mt-6 tracking-widest uppercase leading-relaxed">
-            A few things I've built —<br/>turning ideas into real,<br/>working products.
+            Scroll to explore some of the things I've built.
           </p>
         </div>
 
-        {/* Mobile Projects */}
         <div className="flex flex-col space-y-16">
           {ENRICHED_PROJECTS.map((project, i) => (
-            <div key={project.id} className="flex flex-col border border-white/10 rounded-2xl bg-[#060608] p-6 overflow-hidden relative">
-               <div className="flex items-center space-x-4 mb-4">
-                 <span className="font-mono text-xs text-gray-500 tracking-widest">{String(i + 1).padStart(2, '0')} / 05</span>
-               </div>
+            <div key={project.id} className="mobile-card flex flex-col rounded-2xl bg-[#060608] border border-white/10 overflow-hidden relative">
                
-               <h3 className="text-4xl font-bebas text-white mb-2 tracking-wider uppercase">{project.name}</h3>
-               <p className="font-mono text-[9px] tracking-[0.2em] text-[#46B7FF] uppercase mb-6">{project.category}</p>
-               
-               <div className="w-full h-48 bg-[#0A0A0E] border border-white/5 rounded-xl mb-6 relative overflow-hidden">
+               <div className="w-full h-48 bg-[#0A0A0E] border-b border-white/5 relative overflow-hidden">
                   <MockupUI id={project.id} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-transparent to-transparent opacity-90" />
                </div>
 
-               <p className="text-gray-400 font-montserrat font-light text-xs leading-relaxed mb-6">
-                 {project.description}
-               </p>
+               <div className="p-6">
+                 <div className="flex items-center space-x-3 mb-4">
+                   <span className="font-mono text-[10px] text-gray-500 tracking-widest">{String(i + 1).padStart(2, '0')} / {String(ENRICHED_PROJECTS.length).padStart(2, '0')}</span>
+                 </div>
+                 
+                 <h3 className="text-4xl font-bebas text-white mb-1 tracking-wider uppercase">{project.name}</h3>
+                 <p className="font-mono text-[9px] tracking-[0.2em] text-[#46B7FF] uppercase mb-4">{project.category}</p>
+                 
+                 <p className="text-gray-400 font-montserrat font-light text-xs leading-relaxed mb-6">
+                   {project.description}
+                 </p>
 
-               <div className="flex flex-wrap gap-2 mb-8">
-                 {project.tech.map(t => (
-                   <span key={t} className="px-2 py-1 text-[8px] font-mono border border-white/10 text-gray-400 rounded bg-[#0A0A0F]">
-                     {t}
-                   </span>
-                 ))}
+                 <div className="flex flex-wrap gap-2 mb-6">
+                   {project.tech.map(t => (
+                     <span key={t} className="px-2 py-1 text-[8px] font-mono border border-white/10 text-gray-400 rounded bg-[#0A0A0F]">
+                       {t}
+                     </span>
+                   ))}
+                 </div>
+
+                 <div className="flex items-center gap-3">
+                    <button 
+                      className="flex-1 bg-[#46B7FF] text-black py-3 rounded text-[10px] font-bold tracking-widest flex items-center justify-center space-x-2" 
+                      onClick={() => window.open(project.link, '_blank')}
+                    >
+                       <span>VIEW</span>
+                       <ArrowUpRight size={14} />
+                    </button>
+                    <button 
+                      className="flex-1 border border-white/20 text-white py-3 rounded text-[10px] font-bold tracking-widest flex items-center justify-center space-x-2" 
+                      onClick={() => window.open(project.link, '_blank')}
+                    >
+                       <span>GITHUB</span>
+                       <ArrowUpRight size={14} />
+                    </button>
+                 </div>
                </div>
-
-               <button 
-                 className="w-full bg-[#46B7FF] text-black py-4 rounded text-[10px] font-bold tracking-widest flex items-center justify-center space-x-2" 
-                 onClick={() => window.open(project.link, '_blank')}
-               >
-                  <span>VIEW PROJECT</span>
-                  <ArrowUpRight size={14} />
-               </button>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
